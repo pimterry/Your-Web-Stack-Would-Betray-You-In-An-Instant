@@ -1,0 +1,27 @@
+35 mins total
+
+- Intro
+  Me, Softwire, Security is a big deal, not just about your code, etc
+
+- Heartbleed? 
+  Everything breaks. Complicated old things particularly
+  http://opensslrampage.org/
+
+- Apache 
+  Holes anywhere can break *everything*
+
+- Rails
+  User input is dangerous
+  Data formats are dangerous (complexity again)
+
+- PHP
+  Testing is important!
+
+- Postgres
+  Exposing your internals makes all of this possible
+
+- Github OAuth?
+  Tricky for time, but good overall example of why all the isolation etc above is important
+
+- Conclusion
+
