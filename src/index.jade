@@ -62,6 +62,71 @@ html
           li Database
           li Network Transport
 
+      section
+        h2 Ruby on Rails
+
+        ul.stack.corner
+          li.lowlight Your Code
+          li Web Framework
+          li.lowlight Programming Language
+          li.lowlight Web Server
+          li.lowlight Database
+          li.lowlight Network Transport
+
+      section
+        h2 YAML
+
+        pre
+          code.language-javascript.
+            ---
+            name: "Tim Perry"
+            company: "Softwire"
+            speaking: Yes
+            ears:
+             - "Left"
+             - "Right"
+      section
+        h2 YAML
+
+        pre
+          code.language-javascript.
+            --- !ruby/hash:User
+            name: "Tim Perry"
+            company: "Softwire"
+            speaking: Yes
+            arms:
+             - "Left"
+             - "Right"
+      section
+        h2 YAML
+        pre
+          code.language-javascript.
+            user = User.allocate
+            values.each_pair { |key,val|
+                user[key] = val
+            }
+      section
+        h2 NamedRouteCollection
+        pre
+          code.language-javascript.
+            alias []= add
+
+            def add(name, route)
+              ...
+              @module.module_eval("remove_possible_method :\#{name}; ...")
+              ...
+            end
+      section
+        h2 Arbitrary Code Execution with YAML
+        pre
+          code.language-javascript.
+            --- !ruby/hash:ActionDispatch::Routing::RouteSet::NamedRouteCollection
+            “ignored; puts 'Hello World';”: 
+                !ruby/object:OpenStruct { ‘table’:{‘defaults’:{}} }
+      section
+        h2 Uh oh
+
+
     // build:js scripts/scripts.js
     script(src='bower_components/bespoke.js/dist/bespoke.min.js')
     script(src='bower_components/bespoke-keys/dist/bespoke-keys.min.js')
