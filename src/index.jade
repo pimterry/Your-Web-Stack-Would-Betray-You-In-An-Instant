@@ -168,6 +168,94 @@ html
       section
         h2.full-slide Fear Complexity
 
+      section
+        h2.full-slide PHP 
+
+        ul.stack.corner
+          li.lowlight Your Code
+          li.lowlight Web Framework
+          li Programming Language
+          li.lowlight Web Server
+          li.lowlight Database
+          li.lowlight Network Transport
+
+      section
+        h2 PHP
+        pre
+          code.language-php.
+            $user = new User();
+            $user-&gt;username = $_POST['username'];
+
+            $hashedPassword = crypt($_POST['password'], $salt);
+            $user-&gt;password = $hashedPassword;
+
+            $user-&gt;save();
+        p (Salt generation and all validation omitted)
+
+      section
+        h2 PHP
+        pre
+          code.language-php.
+            $salt = $user-&gt;password;
+            $hashedPasswordInput = crypt($_POST['password'], $salt);
+
+            $loginOk = ($user-&gt;password === $hashedPasswordInput);
+      section
+        h2 PHP 5.3.7
+        h4 CVE-2011-3189
+        pre(style='font-size: 24px')
+          code.language-c.
+
+          span(style='color: #f77')
+            code.language-c.
+            | - strncat(passwd, "$", 1);
+
+          br
+          span(style='color: #7f7')
+            code.language-c.
+            | + strlcat(passwd, "$", 1);
+        aside
+          ul
+            li Fixed another important security issue
+            li Recommended for immediate update for 5 days
+            li N vs L
+            li N appends string of given length, and null-terminates
+            li L takes a total length, and ensures it's null terminated
+            li Means that the second one always just sets passwd to be an empty string
+            li Linting fix, for security reasons
+
+      section
+        h2 PHP 5.3.7
+        h4 CVE-2011-3189
+        pre
+          code.language-php.
+            crypt($password, $salt) === $salt
+      section
+        h2 PHP 5.3.7
+        h4 CVE-2011-3189
+        pre
+          code.language-php.
+            $salt = $user-&gt;password;
+            $hashedPasswordInput = crypt($_POST['password'], $salt);
+
+            $loginOk = ($user-&gt;password === $hashedPasswordInput);
+      section
+        h2 PHP 5.3.7
+        h4 CVE-2011-3189
+        pre
+          code.language-php.
+            $salt = $user-&gt;password;
+            $hashedPasswordInput = $salt;
+
+            $loginOk = ($user-&gt;password === $hashedPasswordInput);
+      section
+        h2 Tests?
+      section
+        h2 Reported?
+
+      section
+        h2.full-slide Best Practices Are Important
+
 
     // build:js scripts/scripts.js
     script(src='bower_components/bespoke.js/dist/bespoke.min.js')
@@ -178,6 +266,8 @@ html
     script(src='bower_components/bespoke-state/dist/bespoke-state.min.js')
     script(src='bower_components/prism/prism.js')
     script(src='bower_components/prism/components/prism-ruby.js')
+    script(src='bower_components/prism/components/prism-php.js')
+    script(src='bower_components/prism/components/prism-c.js')
     script(src='scripts/prism-yaml.js')
     script(src='scripts/main.js')
     // endbuild
