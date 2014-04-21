@@ -163,10 +163,11 @@ html
         h2.full-slide Ouch
       
       section
-        h2.full-slide Fear User Input
+        h2.full-slide Distrust Complexity
 
       section
-        h2.full-slide Fear Complexity
+        h2.full-slide Fear user input
+        h3 (in any format)
 
       section
         h2.full-slide PHP 
@@ -254,7 +255,7 @@ html
         h2 Reported?
 
       section
-        h2.full-slide Best Practices Are Important
+        h2.full-slide Best Practices Matter
 
       section
         h2.full-slide PostgreSQL
@@ -367,6 +368,31 @@ html
             li Would've been fairly safe regardless
             li Secret data is not directly accessible from traffic
             li SSL terminated separately from server, and then forwarded
+
+      section
+        h4 Nothing is really secure, but
+        h2.full-slide Don't Panic
+        ul.conclusions
+          li Distrust complexity
+          li Be very cautious around user input (in any format)
+          li Pay attention to good software development practices
+          li Isolate your components from one another 
+          li Isolate your components from the world
+          li <strong>Watch for security notices, and be ready to update <em>fast</em></strong>
+
+      section
+        h2 Any questions?
+        h4 The also rans:
+        ul
+          li <strong>Node.JS</strong>: Cross-request header stealing <br/>(CVE-2012-2330)
+          li <strong>Python</strong>: Remote code execution via builtin socket receive function <br/>(CVE-2014-1912)
+          li <strong>GCC</strong>: Optimization removes check required to avoid overflow <br/>(CVE-2009-1897)
+          li <strong>WebSockets</strong>: Security bug in initial spec, when used with caching proxies
+          li <strong>BEAST/CRIME/BREACH</strong>: Series of attacks against SSL/TLS <br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)
+          li <strong>MongoDB</strong>: Overflow exploits, crashing servers with a single request <br/>(CVE-2012-6619, CVE-2013-2132) 
+          li <strong>RubyGems</strong>: YAML exploit gave an external user full access to the repo
+          li <strong>NPM</strong>: Full disk exposure on NPM server with a maliciously crafted URL       
+
         
 
     // build:js scripts/scripts.js
