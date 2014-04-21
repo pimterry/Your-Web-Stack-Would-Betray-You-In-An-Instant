@@ -320,6 +320,54 @@ html
             li Only safe with a hard firewall in the way
             li Don't rely on one single point of failure for security
             li Huge problems for Heroku etc
+      section
+        h2 OpenSSL
+        h4 Heartbleed (CVE-2014-0160)
+
+        img(src='/images/heartbleed.svg',height=350)
+        
+        ul.stack.corner
+          li.lowlight Your Code
+          li.lowlight Web Framework
+          li.lowlight Programming Language
+          li.lowlight Web Server
+          li.lowlight Database
+          li Network Transport
+
+      section
+        h2 OpenSSL
+        h4 Heartbleed (CVE-2014-0160)
+        pre
+          code.language-c.
+            // Read payload length into 'payload' var
+            n2s(requestBuffer, payload);
+
+            // Allocate memory for the response
+            responseBuffer = OPENSSL_malloc(1 + 2 + payload + padding);
+
+            // Write payload length to response buffer
+            s2n(payload, responseBuffer);
+
+            // Copy 'payload' bytes from request buffer to response
+            memcpy(responseBuffer, requestBuffer, payload);
+        p (Some variable names changed for clarity)
+        aside
+          ul
+            li Payload var naming
+            li Memcpy
+            li OPENSSL_malloc
+
+      section
+        h2 Tarsnap
+        h4 Heartbleed (CVE-2014-0160)
+        aside
+          ul
+            li Using SSL
+            li Actually an old version so safe anyway
+            li Would've been fairly safe regardless
+            li Secret data is not directly accessible from traffic
+            li SSL terminated separately from server, and then forwarded
+        
 
     // build:js scripts/scripts.js
     script(src='bower_components/bespoke.js/dist/bespoke.min.js')
