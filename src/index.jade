@@ -400,6 +400,7 @@ html
             li Only safe with a hard firewall in the way
             li Don't rely on one single point of failure for security
             li Huge problems for Heroku etc
+
       section
         h2 OpenSSL
         h4 Heartbleed (CVE-2014-0160)
@@ -455,23 +456,25 @@ html
           li Distrust complexity
           li Be very cautious around user input (in any format)
           li Pay attention to good software development practices
-          li Turn off or limit unnecessary features
+          li Turn off or limit unnecessary features wherever possible
           li Isolate your components from one another, and the world
           li <strong>Watch for security notices, and be ready to update <em>fast</em></strong>
 
       section
-        h2 Any questions?
-        h4 The also rans:
+        h2 The also rans:
+
         ul
           li <strong>Node.JS</strong>: Cross-request header stealing <br/>(CVE-2012-2330)
           li <strong>Python</strong>: Remote code execution via builtin socket receive function <br/>(CVE-2014-1912)
-          li <strong>GCC</strong>: Optimization removes check required to avoid overflow <br/>(CVE-2009-1897)
+          li <strong>GCC</strong>: Optimizations remove checks required to avoid overflow exploits<br/>(CVE-2009-1897)
           li <strong>WebSockets</strong>: Security bug in initial spec, when used with caching proxies
           li <strong>BEAST/CRIME/BREACH</strong>: Series of attacks against SSL/TLS <br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)
           li <strong>MongoDB</strong>: Overflow exploits, crashing servers with a single request <br/>(CVE-2012-6619, CVE-2013-2132) 
           li <strong>RubyGems</strong>: YAML exploit gave an external user full access to the repo
           li <strong>NPM</strong>: Full disk exposure on NPM server with a maliciously crafted URL       
 
+      section
+        h2.full-slide Any questions?
         
 
     // build:js scripts/scripts.js
