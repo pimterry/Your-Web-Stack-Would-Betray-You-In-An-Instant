@@ -3,5 +3,6 @@ bespoke.from('article', {
   touch: true,
   scale: true,
   hash: true,
-  state: true
+  state: true,
+  secondary: true
 });

@@ -31,17 +31,18 @@ html
               a.nickname.url(href='http://twitter.com/pimterry',rel="me") @pimterry
             li
               a.url(href='http://github.com/pimterry',rel="me") github.com/pimterry
-        aside
-          ul
-            li Tim Perry
-            li Softwire. London. Bespoke dev on a huge variety of projects
-            li Softwire are hiring!
 
       section
         h2 Security
+        aside
+          ul
+            li Want to talk about security
+            li Security = attackers on the internet trying to mess with your web app
+            li Any site with reasonable traffic is worth attacking
+            li Platform for attacks, phishing, virus distribution
 
       section
-        h2 Your Application:
+        h2 Your Web Application:
 
         ul.stack
           li Your Code
@@ -51,8 +52,25 @@ html
           li Database
           li Network Transport
 
+        aside
+          ul
+            li This is you
+            li Walk through each
+
       section
         h2 Everything is insecure
+        
+        aside
+          ul
+            li Bit of a spoiler
+            li Whole point of the talk
+            li Security is hard
+            li You're not going to do it perfectly
+            li Even the big boys fail occasionally
+            li You can do it well enough
+            li Inevitable failure means that it's more about minimizing risk + potential damage
+            li Software is complicated, and there's lots of attackers
+            li Not as bad as it sounds
 
       section
         h2 Things that will be loudly publically insecure:
@@ -63,7 +81,25 @@ html
           li Programming Language
           li Web Server
           li Database
-          li Network Transport
+          li Network Transport        
+
+        aside
+          ul
+            li Upside to this
+            li When you go wrong, nobody cares
+            li There's probably very few people looking
+
+            li Do care about popular common tools
+            li Many people looking
+            li Vulnerabilities become instantly well known and abused
+            li This talk is not about your code
+            li It's about the large amounts of shared code that you're using
+            li Makes you vulnerable to bugs that are not your fault
+
+            li I want to talk about some of these
+            li how they work
+            li why people got bitten
+            li what you can do to avoid this
 
       section
         h2.full-slide Ruby on Rails
@@ -75,6 +111,14 @@ html
           li.lowlight Web Server
           li.lowlight Database
           li.lowlight Network Transport
+
+        aside
+          ul
+            li Start with rails
+            li Popular web framework
+            li Easy to quickly build applications
+            li Automatically handles lot of complexity for you
+            li On top of Ruby the language
 
       section
         h2 YAML
@@ -88,6 +132,18 @@ html
             ears:
              - "Left"
              - "Right"
+        aside
+          ul
+            li Detour first
+            li Very popular in the Ruby world
+            li Yet Another Markup Language
+            li Config, serialization
+            li *Mostly compatible* with JSON
+            li *Optional braces*
+            li Numbers, booleans, integers
+            li Docs delimited by these triple -
+            li Supports lots of extra complexity
+
       section
         h2 YAML
 
@@ -100,6 +156,12 @@ html
             ears:
              - "Left"
              - "Right"
+        aside
+          ul
+            li One thing it supports is types
+            li User, as a hash/dict/map
+            li Default Ruby YAML parser will build a User when this is parsed
+
       section
         h2 YAML
         pre
@@ -108,6 +170,15 @@ html
             values.each_pair { |key,val|
                 user[key] = val
             }
+        aside
+          ul
+            li Allocate is not constructor
+            li Set key-values for each prop, name/company etc
+            li Weird: parsing process actively involved in your code
+            li Not just weird: because you can override property setting
+            li Key, Value and class are user controller 
+            li Dangerous: if key/value's ever used for anything...
+
       section
         h2 NamedRouteCollection
         pre
@@ -121,6 +192,36 @@ html
               )
               ...
             end
+        aside
+          ul
+            li Builtin Rails class
+            li \#{name} is string replacement syntax in Ruby
+            li Classic eval-injection attack
+
+      section
+        h2 NamedRouteCollection
+        pre
+          code.language-ruby.
+            name = "ignored; puts 'Hello'; \n__END__\n"            
+
+            @module.module_eval(
+              "remove_possible_method :\#{name}; ..."
+            )
+
+            # Becomes:
+
+            @module.module_eval(
+              "remove_possible_method :ignored; puts 'Hello'; 
+               __END__
+               ..."
+            )
+        aside
+          ul 
+            li This runs 'puts hello'
+            li puts = print
+            li Works because __END__ exists
+            li Terminates a chunk of code prematurely
+            
       section
         h2 Arbitrary Code Execution with YAML
         pre
@@ -130,6 +231,14 @@ html
                 !ruby/object:OpenStruct 
                   ‘table’: {‘defaults’: {}}
         p (Namespaces omitted)
+        aside
+          ul
+            li YAML equivelant
+            li Need openstruct for validation
+            li If Rails parses this, you win
+            li But somehow you need to get Rails to parse this
+            li Early last year, that got really easy
+
       section
         h2 Rails
         h4 CVE-2013-0156
@@ -142,6 +251,12 @@ html
                   !ruby/object:OpenStruct
                     'table': {'defaults': {}}
             &lt;/foo&gt;
+        aside
+          ul
+            li Rails has a lot of convenient features
+            li Default: Endpoints can take data in JSON or XML
+            li XML elements can be typed, as here
+            li YAML is a valid type, for some ungodly reason
       section
         h2 Rails
         h4 CVE-2013-0333
@@ -153,6 +268,18 @@ html
             "ignored; puts 'Hello'; \n__END__\n":
                 !ruby/object\u003aOpenStruct
                   'table': {'defaults': {}}
+        aside
+          ul
+            li Two weeks later, another one
+            li Default JSON parser is really just YAML
+            li Intended to use YAML internally
+            li But actually doesn't parse JSON and restructure
+            li Couple of search and replaces and hopes for the best
+            li No consideration of security at all
+            li Replaces date strings with YAML date literals for convenience            
+            li Adds a space after colons, because that's required in YAML
+            li Then does unicode replacement too, afterwards
+
       section
         h2 Rails
         h4 CVE-2013-0277
@@ -164,9 +291,24 @@ html
     
       section
         h2.full-slide Ouch
+
+        aside
+          ul
+            li Pretty painful for Rails developers
+            li 3 times in two months
+            li Repeated nights of no sleep redeploying everything before they got hacked
+            li All that work was not for nothing though
+            li I for example got a great example out of it
+            li And you get some useful lessons
       
       section
         h2.full-slide Distrust Complexity
+        aside
+          ul
+            li Complexity. Hides. Bugs.
+            li Powerful complexity is even worse
+            li Not just YAML: see XML
+            li As a general rule, JSON itself is pretty safe though, afaik
 
       section
         h2.full-slide Fear user input
@@ -195,6 +337,11 @@ html
 
             $user-&gt;save();
         p (Salt generation and all validation omitted)
+        aside
+          ul
+            li Validation!
+            li Salt is unique per user
+            li But same salt for every login
 
       section
         h2 PHP
@@ -204,6 +351,11 @@ html
             $hashedPasswordInput = crypt($_POST['password'], $salt);
 
             $loginOk = ($user-&gt;password === $hashedPasswordInput);
+        aside
+          ul
+            li Convenient feature though: salt is included in password
+            li This is the recommended way of handling this
+            li Separated by a $
       section
         h2 PHP 5.3.7
         h4 CVE-2011-3189
@@ -220,13 +372,12 @@ html
             | + strlcat(passwd, "$", 1);
         aside
           ul
-            li Fixed another important security issue
-            li Recommended for immediate update for 5 days
-            li N vs L
             li N appends string of given length, and null-terminates
             li L takes a total length, and ensures it's null terminated
             li Means that the second one always just sets passwd to be an empty string
             li Linting fix, for security reasons
+            li Fixed another important security issue
+            li Recommended for immediate update for 5 days
 
       section
         h2 PHP 5.3.7
@@ -361,21 +512,21 @@ html
         pre
           code.language-bash.
             psql --host="example.com" \
-                 --dbname="-r /var/lib/postgres/data/db"
+                 --dbname="-r/var/lib/postgres/data/db"
       section
         h2 Postgres
         h4 CVE-2013-1899
         pre
           code.language-bash.
             no pg_hba.conf entry for host "example.com", 
-              user "postgres", database "-r my_provided_filename"
+              user "postgres", database "-r/var/lib/postgres/data/db"
       section
         h2 Postgres
         h4 CVE-2013-1899
         pre
           code.language-bash.
             psql --host="example.com" \
-                 --dbname="-r /var/lib/postgres/.profile" \
+                 --dbname="-r/var/lib/postgres/.profile" \
                  --username="
                  echo 'Hello' #"
       section
@@ -386,7 +537,7 @@ html
             $ cat .profile
             [...]
             no pg_hba.conf entry for host "example.com", user "
-            echo 'Hello' #", database "-r /var/lib/postgres/.profile"
+            echo 'Hello' #", database "-r/var/lib/postgres/.profile"
 
         pre
           code.language-bash.
@@ -471,13 +622,22 @@ html
           li <strong>Python</strong>: Remote code execution via builtin socket receive function <br/>(CVE-2014-1912)
           li <strong>GCC</strong>: Optimizations remove checks required to avoid overflow exploits<br/>(CVE-2009-1897)
           li <strong>WebSockets</strong>: Security bug in initial spec, when used with caching proxies
-          li <strong>BEAST/CRIME/BREACH</strong>: Series of attacks against SSL/TLS <br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)
+          li <strong>SSL/TLS</strong>: BEAST/CRIME/BREACH attacks against SSL and TLS<br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)
           li <strong>MongoDB</strong>: Overflow exploits, crashing servers with a single request <br/>(CVE-2012-6619, CVE-2013-2132) 
           li <strong>RubyGems</strong>: YAML exploit gave an external user full access to the repo
           li <strong>NPM</strong>: Full disk exposure on NPM server with a maliciously crafted URL       
 
       section
         h2.full-slide Any questions?
+
+        aside
+          ul
+            li C# stack: Windows!
+            li DOS via a specific IPv6 packet
+            li XMLDOM ActiveX control in every windows up to 8.1 is vulnerable to bil laughs
+            li Mostly fairly stable otherwise, main attacks tend to be ActiveX component leftovers
+            li Java: 35 remotely exploitable vulns fixed this month's Java SE release
+            li 4 exploits rated 10/10, but no details, includes many in JAX-WS etc
         
 
     // build:js scripts/scripts.js
@@ -487,6 +647,9 @@ html
     script(src='bower_components/bespoke-scale/dist/bespoke-scale.min.js')
     script(src='bower_components/bespoke-hash/dist/bespoke-hash.min.js')
     script(src='bower_components/bespoke-state/dist/bespoke-state.min.js')
+    script(src='bower_components/bespoke-convenient/dist/bespoke-convenient.js')
+    script(src='bower_components/bespoke-indexfinger/dist/bespoke-indexfinger.js')
+    script(src='bower_components/bespoke-secondary/dist/bespoke-secondary.js')
     script(src='bower_components/prism/prism.js')
     script(src='bower_components/prism/components/prism-ruby.js')
     script(src='bower_components/prism/components/prism-php.js')
