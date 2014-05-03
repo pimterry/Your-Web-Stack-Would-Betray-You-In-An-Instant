@@ -300,19 +300,15 @@ html
             li All that work was not for nothing though
             li I for example got a great example out of it
             li And you get some useful lessons
-      
-      section
-        h2.full-slide Distrust Complexity
-        aside
-          ul
-            li Complexity. Hides. Bugs.
-            li Powerful complexity is even worse
-            li Not just YAML: see XML
-            li As a general rule, JSON itself is pretty safe though, afaik
 
       section
         h2.full-slide Fear user input
         h3 (in any format)
+        aside
+        ul
+          li Limit what input you accept
+          li Tools will may assume their input is safe
+          li Powerful formats: both YAML and XML, but JSON mostly safe
 
       section
         h2.full-slide PHP 
@@ -660,7 +656,6 @@ html
         h4 Nothing is really secure, but
         h2.full-slide Don't Panic
         ul.conclusions
-          li Distrust complexity
           li Be very cautious around user input (in any format)
           li Pay attention to good software development practices
           li Turn off or limit unnecessary features wherever possible
