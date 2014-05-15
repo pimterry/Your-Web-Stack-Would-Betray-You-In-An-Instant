@@ -5,7 +5,9 @@
 
 - Heartbleed? 
   Everything breaks. Complicated old things particularly
-  http://opensslrampage.org/
+  Static analysis good, unsafe languages bad
+  http://opensslrampage.org
+  Tarsnap safe, because it was well isolated
 
 - Apache 
   Holes anywhere can break *everything*
@@ -13,11 +15,13 @@
 - Rails
   User input is dangerous
   Data formats are dangerous (complexity again)
+  Postel's Law!
 
 - PHP
-  Testing is important!
+  Testing and best practices are important!
 
 - Postgres
+  Isolating your system from itself keeps everything independently secure
   Exposing your internals makes all of this possible
 
 - Github OAuth?
