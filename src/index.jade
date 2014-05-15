@@ -660,22 +660,11 @@ html
             li OPENSSL_malloc
 
       section
-        h2 Tarsnap
-        h4 Heartbleed (CVE-2014-0160)
-        aside
-          ul
-            li Using SSL
-            li Actually an old version so safe anyway
-            li Would've been fairly safe regardless
-            li Secret data is not directly accessible from traffic
-            li SSL terminated separately from server, and then forwarded
-
-      section
         h4 Nothing is really secure, but
         h2.full-slide Don't Panic
         ul.conclusions
           li Be very cautious around user input (in any format)
-          li Pay attention to good software development practices
+          li Pay attention to software development best practices
           li Turn off or limit unnecessary features wherever possible
           li Isolate your components from one another, and the world
           li.highlight Watch for security notices, and be ready to update <em>fast</em>
