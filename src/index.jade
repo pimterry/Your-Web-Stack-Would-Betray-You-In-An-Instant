@@ -604,8 +604,8 @@ html
             no: command not found
             Hello
       section
-        h2.full-slide Isolate Your Infrastructure
-        p (And everything else)
+        h2.fullish-slide Isolate Your Infrastructure
+        h3 (And everything else)
         aside
           ul
             li No auth required
@@ -678,20 +678,20 @@ html
           li Pay attention to good software development practices
           li Turn off or limit unnecessary features wherever possible
           li Isolate your components from one another, and the world
-          li <strong>Watch for security notices, and be ready to update <em>fast</em></strong>
+          li.highlight Watch for security notices, and be ready to update <em>fast</em>
 
       section
         h2 The also-rans:
 
         ul
-          li <strong>Node.JS</strong>: Cross-request header stealing <br/>(CVE-2012-2330)
-          li <strong>Python</strong>: Remote code execution via builtin socket receive function <br/>(CVE-2014-1912)
-          li <strong>GCC</strong>: Optimizations remove checks required to avoid overflow exploits<br/>(CVE-2009-1897)
-          li <strong>WebSockets</strong>: Security bug in initial spec, when used with caching proxies
-          li <strong>SSL/TLS</strong>: BEAST/CRIME/BREACH attacks against SSL and TLS<br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)
-          li <strong>MongoDB</strong>: Overflow exploits, crashing servers with a single request <br/>(CVE-2012-6619, CVE-2013-2132) 
-          li <strong>RubyGems</strong>: YAML exploit gave an external user full access to the repo
-          li <strong>NPM</strong>: Full disk exposure on NPM server with a maliciously crafted URL       
+          li <span class='highlight'>Node.JS</span>: Cross-request header stealing <br/>(CVE-2012-2330)
+          li <span class='highlight'>Python</span>: Remote code execution via builtin socket receive function <br/>(CVE-2014-1912)
+          li <span class='highlight'>GCC</span>: Optimizations remove checks required to avoid overflow exploits<br/>(CVE-2009-1897)
+          li <span class='highlight'>WebSockets</span>: Security bug in initial spec, when used with caching proxies
+          li <span class='highlight'>SSL/TLS</span>: BEAST/CRIME/BREACH attacks against SSL and TLS<br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)
+          li <span class='highlight'>MongoDB</span>: Overflow exploits, crashing servers with a single request <br/>(CVE-2012-6619, CVE-2013-2132)
+          li <span class='highlight'>RubyGems</span>: YAML exploit gave an external user full access to the repo
+          li <span class='highlight'>NPM</span>: Full disk exposure on NPM server with a maliciously crafted URL
 
       section
         h2.full-slide Any questions?
