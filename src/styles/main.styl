@@ -8,6 +8,7 @@
 
 body {
   font-family: 'Patua One', sans;
+  background-color: #fafafa;
 }
 
 .bespoke-slide {
@@ -45,7 +46,7 @@ h2.fullish-slide {
 
 h3 {
   padding-top: 15px;
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 ul {
@@ -151,14 +152,24 @@ pre {
 
 .bespoke-active.instant {
   transition: none;
-  background-color: #fff;
+  background-color: #fafafa;
 }
 
 .highlight {
   font-weight: bolder;
-  color: #d00;
+  color: #c13038;
 }
 
 .topic-slide {
   background-color: #f3b840;
+}
+
+.solution-slide {
+  background-color: #c13038;
+}
+
+*[data-bespoke-state='solution-slide'] {
+  &, * {
+    color: #fafafa;
+  }
 }

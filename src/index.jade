@@ -38,7 +38,6 @@ html
           ul
             li Bespoke software development company
             li in London
-            li Lots of projects, mostly web tools, have to care about this stuff
             li We're recruiting!
 
       section
@@ -47,9 +46,8 @@ html
           ul
             li When I say security, I mean handling nasty people on the internet trying to mess with your web app
             li Often assumed you're not worth attacking
-            li Any site with reasonable traffic is worth attacking
-            li Virus and malware distribution, phishing, or as a platform for other attacks
-            li If you do anything valuable, you don't want people messing with that
+            li Opportunistic attackers, looking for easy security holes
+            li Platform for virus and malware distribution, phishing, for further attacks elsewhere.
 
       section
         h2 Your Web Application:
@@ -77,11 +75,8 @@ html
             li Whole point of the talk
             li Security is hard
             li You're not going to do it perfectly
-            li Even the big boys fail occasionally
-            li You can do it well enough
             li Inevitable failure means that it's more about minimizing risk + potential damage
-            li Software is complicated, and there's lots of attackers
-            li Not as bad as it sounds
+            li Upside to this
 
       section
         h2 Things that will be loudly publically insecure:
@@ -96,21 +91,28 @@ html
 
         aside
           ul
-            li Upside to this
-            li When you go wrong, nobody cares
+            li If your code is insecure, nobody cares
             li There's probably very few people looking
 
-            li Do care about popular common tools
-            li Many people looking
-            li Vulnerabilities become instantly well known and abused
-            li This talk is not about your code
-            li It's about the large amounts of shared code that you're using
-            li Makes you vulnerable to bugs that are not your fault
+            li Lots of value in holes in common components
+            li This talk is not about your code, about shared code you're using
 
-            li I want to talk about some of these
-            li how they work
-            li why people got bitten
-            li what you can do to avoid this
+            li I want to talk about some of these, how they work
+            li because I enjoy taunting software devs
+            li also what you can do to avoid this
+            li Before we do that though
+      section(data-bespoke-state='solution-slide')
+        h2.full-slide
+          | Be Ready  
+          | To Update
+        aside
+          ul
+            li Number one point in this whole talk
+            li Obvious conclusion: if everything will break, you have to be ready to recover
+            li Most projects announce vulnerabilities as soon as they have a release to fix them
+            li All you really have to do is react faster than the other team
+            li If you do nothing else: subscribe to notifications
+            li Make sure you're in a good position to do something about them
 
       section(data-bespoke-state='topic-slide')
         h2.full-slide Ruby on Rails
@@ -312,8 +314,8 @@ html
             li I for example got a great example out of it
             li And you get some useful lessons
 
-      section
-        h2.full-slide Fear user input
+      section(data-bespoke-state='solution-slide')
+        h2.full-slide Fear User Input
         h3 (in any format)
         aside
           ul
@@ -378,60 +380,12 @@ html
             | + strlcat(passwd, "$", 1);
         aside
           ul
-            li N appends string of given length, and null-terminates
-            li L takes a total length, and ensures it's null terminated
-            li Means that the second one always just sets passwd to be an empty string
-            li Linting fix, for security reasons
+            li Well meaning fix to solve build warning
+            li Strncat is considered insecure because it might overflow first arg
+            li Strlcat doesn't do this, so is better
+            li Unfortunately, doesn't do this because of the last arg
             li Fixed another important security issue
             li Recommended for immediate update for 5 days
-
-      section
-        h2 Strings
-        img(src='images/modern-string.png',
-          style='width: 560px; margin: 30px 0 0 -35px')
-
-      section.instant
-        h2 Strings
-        img(src='images/modern-string-details.png',
-          style='width: 560px; margin: 30px 0 0 -35px')
-
-      section.instant
-        h2 Strings
-        img(src='images/c-string.png',
-          style='width: 560px; margin: 30px 0 0 -35px')
-
-      section
-        h2 PHP 5.3.7
-        pre(style='font-size: 24px')
-          code.language-c.
-
-          span(style='color: #f77')
-            code.language-c.
-            | - strncat(passwd, "$", 1);
-
-          br
-          span(style='color: #7f7')
-            code.language-c.
-            | + strlcat(passwd, "$", 1);
-
-      section
-        pre(style='font-size: 200%;')
-          code.language-c.
-            strncat(passwd, "$", 1)
-        img(src='images/strncat.svg',
-          style='width: 500px; margin: 30px')
-
-      section
-        pre(style='font-size: 200%;')
-          code.language-c.
-            strlcat(passwd, "$", 1)
-
-      section
-        pre(style='font-size: 200%;')
-          code.language-c.
-            strlcat(passwd, "$", 1)
-        img(src='images/strlcat.svg',
-          style='width: 500px; margin: 30px')
 
       section
         h2 PHP 5.3.7
@@ -468,7 +422,7 @@ html
       section
         h2 Reported?
 
-      section
+      section(data-bespoke-state='solution-slide')
         h2.full-slide Best Practices Matter
 
       section(data-bespoke-state='topic-slide')
@@ -544,7 +498,7 @@ html
             li Uses all the CPU and memory of a server fairly quickly
             li Your code: watch out for non-linear unbounded complexity from user input
 
-      section
+      section(data-bespoke-state='solution-slide')
         h2.full-slide
           | Features
           br
@@ -566,6 +520,11 @@ html
           code.language-bash.
             psql --host="example.com" \
                  --dbname="blogdb"
+        aside
+          ul
+            li Postgres client
+            li Most absurd bug of the lot
+            li DB name with a dash, it's not a DB name, but command line arg, on the server.
       section
         h2 Postgres
         h4 CVE-2013-1899
@@ -573,6 +532,12 @@ html
           code.language-bash.
             psql --host="example.com" \
                  --dbname="-r/var/lib/postgres/data/db"
+        aside
+          ul
+            li This writes the command output to this file, corrupting the DB
+            li This happens before auth
+            li Actually even before connection filtering
+            li Crash any connectable Postgres instance
       section
         h2 Postgres
         h4 CVE-2013-1899
@@ -580,6 +545,12 @@ html
           code.language-bash.
             no pg_hba.conf entry for host "example.com", 
               user "postgres", database "-r/var/lib/postgres/data/db"
+        aside
+          ul
+            li Log out put looks like this
+            li username is notably under our control
+            li Find somewhere executable to put this
+            li Classic injection attack
       section
         h2 Postgres
         h4 CVE-2013-1899
@@ -589,6 +560,12 @@ html
                  --dbname="-r/var/lib/postgres/.profile" \
                  --username="
                  echo 'Hello' #"
+        aside
+          ul
+            li .Profile is a favourite for this, since it's very liberal about what it'll run
+            li it'll ignore our garbage, just need a line that's usefully executable
+            li it's run whenever a user logs in, here the postgres user
+            li Here newline, then our command, then a comment to clear the rest
       section
         h2 Postgres
         h4 CVE-2013-1899
@@ -604,24 +581,41 @@ html
             $ su - postgres
             no: command not found
             Hello
-      section
-        h2.fullish-slide Isolate Your Infrastructure
-        h3 (And everything else)
         aside
-          ul
-            li No auth required
-            li Filtering in Postgres wouldn't've worked
-            li Only safe with a hard firewall in the way
-            li Don't rely on one single point of failure for security
-            li Huge problems for Heroku etc
 
       section
-        h2 Recap
+        h2 So?
+        aside
+          ul
+            li 1.4 million connectable postgres's, as of this morning
+            li Sometimes for convenience, relying on postgres' own security
+            li Sometimes for distributed infrastructure
+            li All in hilarious danger
+          
+      section(data-bespoke-state='solution-slide')
+        h2.fullish-slide Isolate Your Infrastructure
+        h3 (From itself, and everyone else)
+        aside
+          ul
+            li Isolation is important
+            li Isolate your tools from the world, to reduce attack surface
+            li Combine their security, so both must fail
+            li Isolate your components from one another 
+            li Otherwise you're combining their risks: failure if either fails
+            li Don't rely on one single point of failure for security
+
+      section(data-bespoke-state='topic-slide')
+        h4 Nothing is really secure, but
+        h2.full-slide Don't Panic
         ul.conclusions
+          li Watch for security notices, and be ready to update <em>fast</em>
           li Be very cautious around user input (in any format)
           li Pay attention to software development best practices
           li Turn off or limit unnecessary features wherever possible
           li Isolate your components from one another, and the world
+        aside
+          ul
+            li 
 
       section(data-bespoke-state='topic-slide') 
         h2 OpenSSL
@@ -636,41 +630,18 @@ html
           li.lowlight Web Server
           li.lowlight Database
           li Network Transport
-
-      section
-        h2 OpenSSL
-        h4 Heartbleed (CVE-2014-0160)
-        pre
-          code.language-c.
-            // Read payload length into 'payload' var
-            n2s(requestBuffer, payload);
-
-            // Allocate memory for the response
-            responseBuffer = OPENSSL_malloc(1 + 2 + payload + padding);
-
-            // Write payload length to response buffer
-            s2n(payload, responseBuffer);
-
-            // Copy 'payload' bytes from request buffer to response
-            memcpy(responseBuffer, requestBuffer, payload);
-        p (Some variable names changed for clarity)
         aside
           ul
-            li Payload var naming
-            li Memcpy
-            li OPENSSL_malloc
+            li You've heard lots about this already, I'm sure, so I'll be brief
+            li Heartbleed notably hits every box I've talked about
+            li The core bug is a failure to validate <strong>user input</strong>
+            li The OpenSSL code and management has some major problems
+            li Writing their own malloc: definitely not <strong>best practice</strong>
+            li Heartbeat <strong>feature</strong> itself isn't actually that useful to most people
+            li <strong>Isolation</strong> could definitely limit the damage
+            li Terminate your SSL elsewhere allowed you to isolate at least some of your risk
 
-      section
-        h4 Nothing is really secure, but
-        h2.full-slide Don't Panic
-        ul.conclusions
-          li Be very cautious around user input (in any format)
-          li Pay attention to software development best practices
-          li Turn off or limit unnecessary features wherever possible
-          li Isolate your components from one another, and the world
-          li.highlight Watch for security notices, and be ready to update <em>fast</em>
-
-      section
+      section(data-bespoke-state='topic-slide') 
         h2 The also-rans:
 
         ul
@@ -684,7 +655,9 @@ html
           li <span class='highlight'>NPM</span>: Full disk exposure on NPM server with a maliciously crafted URL
 
       section(data-bespoke-state='topic-slide') 
-        h2.full-slide Any questions?
+        h2.full-slide(style='text-align: left')
+          | Any questions?
+        br
 
         address.vcard
           div.author.fn Tim Perry
@@ -702,6 +675,8 @@ html
 
         aside
           ul
+            li We're recruiting!
+            li Follow me on twitter for slides
             li C# stack: Windows!
             li DOS via a specific IPv6 packet
             li XMLDOM ActiveX control in every windows up to 8.1 is vulnerable to bil laughs
@@ -711,7 +686,7 @@ html
         
 
     // build:js scripts/scripts.js
-    script(src='bower_components/bespoke.js/dist/bespoke.min.js')
+    script(src='bower_components/bespoke.js/dist/bespoke.js')
     script(src='bower_components/bespoke-keys/dist/bespoke-keys.min.js')
     script(src='bower_components/bespoke-touch/dist/bespoke-touch.min.js')
     script(src='bower_components/bespoke-scale/dist/bespoke-scale.min.js')
