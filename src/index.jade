@@ -147,14 +147,10 @@ html
              - "Right"
         aside
           ul
-            li Detour first
             li Very popular in the Ruby world
-            li Yet Another Markup Language
             li Config, serialization
             li *Mostly compatible* with JSON
             li *Optional braces*
-            li Numbers, booleans, integers
-            li Docs delimited by these triple -
             li Supports lots of extra complexity
 
       section
@@ -174,6 +170,7 @@ html
             li One thing it supports is types
             li User, as a hash/dict/map
             li Default Ruby YAML parser will build a User when this is parsed
+            li Dangerous if building, say, database connections, just by parsing
 
       section
         h2 YAML
@@ -189,7 +186,7 @@ html
             li Set key-values for each prop, name/company etc
             li Weird: parsing process actively involved in your code
             li Not just weird: because you can override property setting
-            li Key, Value and class are user controller 
+            li Key, Value and class are user controlled 
             li Dangerous: if key/value's ever used for anything...
 
       section
@@ -207,7 +204,8 @@ html
             end
         aside
           ul
-            li Builtin Rails class
+            li Builtin Rails class, part of routing
+            li Overrides property setting operation
             li \#{name} is string replacement syntax in Ruby
             li Classic eval-injection attack
 
