@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Your Web Stack Would Betray You In An Instant</title>
+    <!-- build:css styles/styles.css-->
+    <link rel="stylesheet" type="text/css" href="bower_components/prism/themes/prism-tomorrow.css">
+    <link rel="stylesheet" type="text/css" href="styles/defaults.css">
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <!-- endbuild-->
+  </head>
+  <body>
+    <article>
+      <section data-bespoke-state="topic-slide">
+        <h1 class="title">Your Web Stack Would Betray You In An Instant</h1>
+        <address class="vcard">
+          <div class="author fn">Tim Perry</div>
+          <div class="note bio"><span>Tech Lead &amp; Open-Source Champion at </span><span class="org vcard"><a href="http://softwire.com" rel="group" class="org fn url">Softwire</a></span></div>
+          <ul class="urls">
+            <li><a href="http://tim-perry.co.uk" rel="me" class="url">tim-perry.co.uk</a></li>
+            <li><a href="http://twitter.com/pimterry" rel="me" class="nickname url">@pimterry</a></li>
+            <li><a href="http://github.com/pimterry" rel="me" class="url">github.com/pimterry</a></li>
+          </ul>
+        </address>
+      </section>
+      <section><img src="images/softwireLogo.png" alt="Softwire" class="logo-big">
+        <aside>
+          <ul>
+            <li>Bespoke software development company</li>
+            <li>in London</li>
+            <li>We're recruiting!</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2 class="full-slide">Security</h2>
+        <aside>
+          <ul>
+            <li>When I say security, I mean handling nasty people on the internet trying to mess with your web app</li>
+            <li>Often assumed you're not worth attacking</li>
+            <li>Opportunistic attackers, looking for easy security holes</li>
+            <li>Platform for virus and malware distribution, phishing, for further attacks elsewhere.</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Your Web Application:</h2>
+        <ul class="stack">
+          <li>Your Code</li>
+          <li>Web Framework</li>
+          <li>Programming Language</li>
+          <li>Web Server</li>
+          <li>Database</li>
+          <li>Network Transport</li>
+        </ul>
+        <aside>
+          <ul>
+            <li>This is you</li>
+            <li>Walk through each</li>
+            <li>Broad concepts</li>
+            <li>Bit of a spoiler</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Everything is insecure</h2>
+        <aside>
+          <ul>
+            <li>Whole point of the talk</li>
+            <li>Security is hard</li>
+            <li>You're not going to do it perfectly</li>
+            <li>Inevitable failure means that it's more about minimizing risk + potential damage</li>
+            <li>Upside to this</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Things that will be loudly publically insecure:</h2>
+        <ul class="stack">
+          <li class="lowlight">Your Code</li>
+          <li>Web Framework</li>
+          <li>Programming Language</li>
+          <li>Web Server</li>
+          <li>Database</li>
+          <li>Network Transport        </li>
+        </ul>
+        <aside>
+          <ul>
+            <li>If your code is insecure, nobody cares</li>
+            <li>There's probably very few people looking</li>
+            <li>Lots of value in holes in common components</li>
+            <li>This talk is not about your code, about shared code you're using</li>
+            <li>I want to talk about some of these, how they work</li>
+            <li>because I enjoy taunting software devs</li>
+            <li>also what you can do to avoid this</li>
+            <li>Before we do that though</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="solution-slide">
+        <h2 class="full-slide">
+          Be Ready  
+          To Update
+        </h2>
+        <aside>
+          <ul>
+            <li>Number one point in this whole talk</li>
+            <li>Obvious conclusion: if everything will break, you have to be ready to recover</li>
+            <li>Most projects announce vulnerabilities as soon as they have a release to fix them</li>
+            <li>All you really have to do is react faster than the other team</li>
+            <li>If you do nothing else: subscribe to notifications</li>
+            <li>Make sure you're in a good position to do something about them</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="topic-slide">
+        <h2 class="full-slide">Ruby on Rails</h2>
+        <ul class="stack corner">
+          <li class="lowlight">Your Code</li>
+          <li>Web Framework</li>
+          <li class="lowlight">Programming Language</li>
+          <li class="lowlight">Web Server</li>
+          <li class="lowlight">Database</li>
+          <li class="lowlight">Network Transport</li>
+        </ul>
+        <aside>
+          <ul>
+            <li>Start with rails</li>
+            <li>Popular web framework</li>
+            <li>Easy to quickly build applications</li>
+            <li>Automatically handles lot of complexity for you</li>
+            <li>On top of Ruby the language</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>YAML</h2>
+        <pre><code class="language-yaml">---
+name: "Tim Perry"
+company: "Softwire"
+speaking: Yes
+ears:
+ - "Left"
+ - "Right"</code></pre>
+        <aside>
+          <ul>
+            <li>Very popular in the Ruby world</li>
+            <li>Config, serialization</li>
+            <li>*Mostly compatible* with JSON</li>
+            <li>*Optional braces*</li>
+            <li>Supports lots of extra complexity</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>YAML</h2>
+        <pre><code class="language-yaml">--- !ruby/hash:User
+name: "Tim Perry"
+company: "Softwire"
+speaking: Yes
+ears:
+ - "Left"
+ - "Right"</code></pre>
+        <aside>
+          <ul>
+            <li>One thing it supports is types</li>
+            <li>User, as a hash/dict/map</li>
+            <li>Default Ruby YAML parser will build a User when this is parsed</li>
+            <li>Dangerous if building, say, database connections, just by parsing</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>YAML</h2>
+        <pre><code class="language-ruby">user = User.allocate
+values.each_pair { |key,val|
+    user[key] = val
+}</code></pre>
+        <aside>
+          <ul>
+            <li>Allocate is not constructor</li>
+            <li>Set key-values for each prop, name/company etc</li>
+            <li>Weird: parsing process actively involved in your code</li>
+            <li>Not just weird: because you can override property setting</li>
+            <li>Key, Value and class are user controlled </li>
+            <li>Dangerous: if key/value's ever used for anything...</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>NamedRouteCollection</h2>
+        <pre><code class="language-ruby">alias []= add
+
+def add(name, route)
+  ...
+  @module.module_eval(
+    "remove_possible_method :#{name}; ..."
+  )
+  ...
+end</code></pre>
+        <aside>
+          <ul>
+            <li>Builtin Rails class, part of routing</li>
+            <li>Overrides property setting operation</li>
+            <li>#{name} is string replacement syntax in Ruby</li>
+            <li>Classic eval-injection attack</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>NamedRouteCollection</h2>
+        <pre><code class="language-ruby">name = "ignored; puts 'Hello'; \n__END__\n"            
+
+@module.module_eval(
+  "remove_possible_method :#{name}; ..."
+)
+
+# Becomes:
+
+@module.module_eval(
+  "remove_possible_method :ignored; puts 'Hello'; 
+   __END__
+   ..."
+)</code></pre>
+        <aside>
+          <ul>
+            <li>This runs 'puts hello'</li>
+            <li>puts = print</li>
+            <li>Works because __END__ exists</li>
+            <li>Terminates a chunk of code prematurely</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Arbitrary Code Execution with YAML</h2>
+        <pre><code class="language-yaml">--- !ruby/hash:NamedRouteCollection
+"ignored; puts 'Hello'; \n__END__\n": 
+    !ruby/object:OpenStruct 
+      ‘table’: {‘defaults’: {}}</code></pre>
+        <p>(Namespaces omitted)</p>
+        <aside>
+          <ul>
+            <li>YAML equivelant</li>
+            <li>Need openstruct for validation</li>
+            <li>If Rails parses this, you win</li>
+            <li>But somehow you need to get Rails to parse this</li>
+            <li>Early last year, that got really easy</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Rails</h2>
+        <h4>CVE-2013-0156</h4>
+        <pre><code class="language-yaml">&lt;?xml version="1.0"?&gt;
+&lt;foo type='yaml'&gt;
+  --- !ruby/hash:NamedRouteCollection
+  "ignored; puts 'Hello'; \n__END__\n":
+      !ruby/object:OpenStruct
+        'table': {'defaults': {}}
+&lt;/foo&gt;</code></pre>
+        <aside>
+          <ul>
+            <li>Rails has a lot of convenient features</li>
+            <li>Default: Endpoints can take data in JSON or XML</li>
+            <li>XML elements can be typed, as here</li>
+            <li>YAML is a valid type, for some ungodly reason</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Rails</h2>
+        <h4>CVE-2013-0333</h4>
+        <pre><code class="language-yaml">Content-Type: application/json
+
+--- !ruby/hash\u003aNamedRouteCollection
+"ignored; puts 'Hello'; \n__END__\n":
+    !ruby/object\u003aOpenStruct
+      'table': {'defaults': {}}</code></pre>
+        <aside>
+          <ul>
+            <li>Two weeks later, another one</li>
+            <li>Default JSON parser is really just YAML</li>
+            <li>Intended to use YAML internally</li>
+            <li>But actually doesn't parse JSON and restructure</li>
+            <li>Couple of search and replaces and hopes for the best</li>
+            <li>No consideration of security at all</li>
+            <li>Replaces date strings with YAML date literals for convenience            </li>
+            <li>Adds a space after colons, because that's required in YAML</li>
+            <li>Then does unicode replacement too, afterwards</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Rails</h2>
+        <h4>CVE-2013-0277</h4>
+        <pre><code class="language-ruby">class BlogPost &lt; ActiveRecord::Base
+  :serialize tags
+end
+</code></pre>
+      </section>
+      <section>
+        <h2 class="full-slide">Ouch</h2>
+        <aside>
+          <ul>
+            <li>Pretty painful for Rails developers</li>
+            <li>3 times in two months</li>
+            <li>Repeated nights of no sleep redeploying everything before they got hacked</li>
+            <li>All that work was not for nothing though</li>
+            <li>I for example got a great example out of it</li>
+            <li>And you get some useful lessons</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="solution-slide">
+        <h2 class="full-slide">Fear User Input</h2>
+        <h3>(in any format)</h3>
+        <aside>
+          <ul>
+            <li>Limit what input you accept</li>
+            <li>Tools will may assume their input is safe</li>
+            <li>Powerful formats: both YAML and XML, but JSON mostly safe</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="topic-slide">
+        <h2 class="full-slide">PHP </h2>
+        <ul class="stack corner">
+          <li class="lowlight">Your Code</li>
+          <li class="lowlight">Web Framework</li>
+          <li>Programming Language</li>
+          <li class="lowlight">Web Server</li>
+          <li class="lowlight">Database</li>
+          <li class="lowlight">Network Transport</li>
+        </ul>
+      </section>
+      <section>
+        <h2>PHP</h2>
+        <pre><code class="language-php">$user = new User();
+$user-&gt;username = $_POST['username'];
+
+$hashedPassword = crypt($_POST['password'], $salt);
+$user-&gt;password = $hashedPassword;
+
+$user-&gt;save();</code></pre>
+        <p>(Salt generation and all validation omitted)</p>
+        <aside>
+          <ul>
+            <li>Validation!</li>
+            <li>Salt is unique per user</li>
+            <li>But same salt for every login</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>PHP</h2>
+        <pre><code class="language-php">$salt = $user-&gt;password;
+$hashedPasswordInput = crypt($_POST['password'], $salt);
+
+$loginOk = ($user-&gt;password === $hashedPasswordInput);</code></pre>
+        <aside>
+          <ul>
+            <li>Convenient feature though: salt is included in password</li>
+            <li>This is the recommended way of handling this</li>
+            <li>Separated by a $</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>PHP 5.3.7</h2>
+        <pre style="font-size: 24px"><code class="language-c"></code><span style="color: #f77"><code class="language-c"></code>- strncat(passwd, "$", 1);</span><br><span style="color: #7f7"><code class="language-c"></code>+ strlcat(passwd, "$", 1);</span></pre>
+        <aside>
+          <ul>
+            <li>Well meaning fix to solve build warning</li>
+            <li>Strncat is considered insecure because it might overflow first arg</li>
+            <li>Strlcat doesn't do this, so is better</li>
+            <li>Unfortunately, doesn't do this because of the last arg</li>
+            <li>Fixed another important security issue</li>
+            <li>Recommended for immediate update for 5 days</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>PHP 5.3.7</h2>
+        <h4>CVE-2011-3189</h4>
+        <pre><code class="language-php">crypt($password, $salt) === $salt</code></pre>
+      </section>
+      <section>
+        <h2>PHP 5.3.7</h2>
+        <h4>CVE-2011-3189</h4>
+        <pre><code class="language-php">$salt = $user-&gt;password;
+$hashedPasswordInput = crypt($_POST['password'], $salt);
+
+$loginOk = ($user-&gt;password === $hashedPasswordInput);</code></pre>
+      </section>
+      <section class="instant">
+        <h2>PHP 5.3.7</h2>
+        <h4>CVE-2011-3189</h4>
+        <pre><code class="language-php">$salt = $user-&gt;password;
+$hashedPasswordInput = $salt;
+
+$loginOk = ($user-&gt;password === $hashedPasswordInput);</code></pre>
+      </section>
+      <section class="instant">
+        <h2>PHP 5.3.7</h2>
+        <h4>CVE-2011-3189</h4>
+        <pre><code class="language-php">$loginOk = ($user-&gt;password === $user-&gt;password);</code></pre>
+      </section>
+      <section>
+        <h2>Tests?</h2>
+      </section>
+      <section>
+        <h2>Reported?</h2>
+      </section>
+      <section data-bespoke-state="solution-slide">
+        <h2 class="full-slide">Best Practices Matter</h2>
+      </section>
+      <section data-bespoke-state="topic-slide">
+        <h2 class="full-slide">Apache</h2>
+        <ul class="stack corner">
+          <li class="lowlight">Your Code</li>
+          <li class="lowlight">Web Framework</li>
+          <li class="lowlight">Programming Language</li>
+          <li>Web Server</li>
+          <li class="lowlight">Database</li>
+          <li class="lowlight">Network Transport</li>
+        </ul>
+      </section>
+      <section>
+        <h2>HTTP Range Headers</h2>
+        <pre><code class="language-bash">GET /video.mp4 HTTP/1.1
+Range: bytes=0-100
+
+HTTP/1.1 206 Partial Content
+Content-Type: video/mp4
+Content-Length: 101
+Accept-Ranges: bytes
+Content-Range: bytes 0-100/123456
+
+&#65533;&#65533;&#65533;123&#65533;asdasd&#65533;89&#65533;2&#65533;b&#65533;B%99D[...]
+</code></pre>
+      </section>
+      <section>
+        <h2>HTTP Range Headers</h2>
+        <pre style="padding: 10px 20px !important"><code class="language-bash">GET /video.mp4 HTTP/1.1
+Range: bytes=0-100,200-300
+
+HTTP/1.1 206 Partial Content
+Content-Type: multipart/byteranges; boundary=qwe123
+Content-Length: 330
+Accept-Ranges: bytes
+
+--qwe123
+Content-Type: video/mp4
+Content-Range: bytes 0-100/123456
+
+&#65533;&#65533;&#65533;123&#65533;asdasd&#65533;89&#65533;2&#65533;b&#65533;B%99D[...]
+--qwe123
+Content-Type: video/mp4
+Content-Range: bytes 200-300/123456
+
+&#65533;&#65533;&#65533;&#65533;9d0cd&#65533;FFFFF?!FFFF&#65533;&#65533;&#65533;"X[...]</code></pre>
+        <aside></aside>
+      </section>
+      <section>
+        <h2>Apache</h2>
+        <h4>Apache Killer (CVE-2011-3192)</h4>
+        <pre><code class="language-bash">HEAD /video.mp4 HTTP/1.1
+Range: bytes=0-,0-1,0-2,0-3,0-4,0-5,0-6,0-7,0-8,0-9,
+  0-10,0-11,0-12,0-13,0-14,0-10,0-16,0-17,0-18,[...]
+  0-1294,0-1295,0-1296,0-1297,0-1298,0-1299
+Accept-Encoding: gzip
+
+...</code></pre>
+        <aside>
+          <ul>
+            <li>Request many overlapping ranges</li>
+            <li>8KB per header: 1299 ranges</li>
+            <li>Expensive on IIS</li>
+            <li>+ large TCP window, to extend the damage</li>
+            <li>Apache implementation creates n^2 buckets to hold per-range data, not n</li>
+            <li>GZIP is not required, but adds extra hurt too</li>
+            <li>Uses all the CPU and memory of a server fairly quickly</li>
+            <li>Your code: watch out for non-linear unbounded complexity from user input</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="solution-slide">
+        <h2 class="full-slide">Features<br>Add Risk</h2>
+      </section>
+      <section data-bespoke-state="topic-slide">
+        <h2 class="full-slide">PostgreSQL</h2>
+        <ul class="stack corner">
+          <li class="lowlight">Your Code</li>
+          <li class="lowlight">Web Framework</li>
+          <li class="lowlight">Programming Language</li>
+          <li class="lowlight">Web Server</li>
+          <li>Database</li>
+          <li class="lowlight">Network Transport</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Postgres</h2>
+        <pre><code class="language-bash">psql --host="example.com" \
+     --dbname="blogdb"</code></pre>
+        <aside>
+          <ul>
+            <li>Postgres client</li>
+            <li>Most absurd bug of the lot</li>
+            <li>DB name with a dash, it's not a DB name, but command line arg, on the server.</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Postgres</h2>
+        <h4>CVE-2013-1899</h4>
+        <pre><code class="language-bash">psql --host="example.com" \
+     --dbname="-r/var/lib/postgres/data/db"</code></pre>
+        <aside>
+          <ul>
+            <li>This writes the command output to this file, corrupting the DB</li>
+            <li>This happens before auth</li>
+            <li>Actually even before connection filtering</li>
+            <li>Crash any connectable Postgres instance</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Postgres</h2>
+        <h4>CVE-2013-1899</h4>
+        <pre><code class="language-bash">no pg_hba.conf entry for host "example.com", 
+  user "postgres", database "-r/var/lib/postgres/data/db"</code></pre>
+        <aside>
+          <ul>
+            <li>Log out put looks like this</li>
+            <li>username is notably under our control</li>
+            <li>Find somewhere executable to put this</li>
+            <li>Classic injection attack</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Postgres</h2>
+        <h4>CVE-2013-1899</h4>
+        <pre><code class="language-bash">psql --host="example.com" \
+     --dbname="-r/var/lib/postgres/.profile" \
+     --username="
+     echo 'Hello' #"</code></pre>
+        <aside>
+          <ul>
+            <li>.Profile is a favourite for this, since it's very liberal about what it'll run</li>
+            <li>it'll ignore our garbage, just need a line that's usefully executable</li>
+            <li>it's run whenever a user logs in, here the postgres user</li>
+            <li>Here newline, then our command, then a comment to clear the rest</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Postgres</h2>
+        <h4>CVE-2013-1899</h4>
+        <pre><code class="language-bash">$ cat .profile
+[...]
+no pg_hba.conf entry for host "example.com", user "
+echo 'Hello' #", database "-r/var/lib/postgres/.profile"
+</code></pre>
+        <pre><code class="language-bash">$ su - postgres
+no: command not found
+Hello</code></pre>
+        <aside></aside>
+      </section>
+      <section>
+        <h2>So?</h2>
+        <aside>
+          <ul>
+            <li>1.4 million connectable postgres's, as of this morning</li>
+            <li>Sometimes for convenience, relying on postgres' own security</li>
+            <li>Sometimes for distributed infrastructure</li>
+            <li>All in hilarious danger</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="solution-slide">
+        <h2 class="fullish-slide">Isolate Your Infrastructure</h2>
+        <h3>(From itself, and everyone else)</h3>
+        <aside>
+          <ul>
+            <li>Isolation is important</li>
+            <li>Isolate your tools from the world, to reduce attack surface</li>
+            <li>Combine their security, so both must fail</li>
+            <li>Isolate your components from one another </li>
+            <li>Otherwise you're combining their risks: failure if either fails</li>
+            <li>Don't rely on one single point of failure for security</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="topic-slide">
+        <h4>Nothing is really secure, but</h4>
+        <h2 class="full-slide">Don't Panic</h2>
+        <ul class="conclusions">
+          <li>Watch for security notices, and be ready to update <em>fast</em></li>
+          <li>Be very cautious around user input (in any format)</li>
+          <li>Pay attention to software development best practices</li>
+          <li>Turn off or limit unnecessary features wherever possible</li>
+          <li>Isolate your components from one another, and the world</li>
+        </ul>
+        <aside>
+          <ul>
+            <li></li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="topic-slide">
+        <h2>OpenSSL</h2>
+        <h4>Heartbleed (CVE-2014-0160)</h4><img src="/images/heartbleed.svg" height="350">
+        <ul class="stack corner">
+          <li class="lowlight">Your Code</li>
+          <li class="lowlight">Web Framework</li>
+          <li class="lowlight">Programming Language</li>
+          <li class="lowlight">Web Server</li>
+          <li class="lowlight">Database</li>
+          <li>Network Transport</li>
+        </ul>
+        <aside>
+          <ul>
+            <li>You've heard lots about this already, I'm sure, so I'll be brief</li>
+            <li>Heartbleed notably hits every box I've talked about</li>
+            <li>The core bug is a failure to validate <strong>user input</strong></li>
+            <li>The OpenSSL code and management has some major problems</li>
+            <li>Writing their own malloc: definitely not <strong>best practice</strong></li>
+            <li>Heartbeat <strong>feature</strong> itself isn't actually that useful to most people</li>
+            <li><strong>Isolation</strong> could definitely limit the damage</li>
+            <li>Terminate your SSL elsewhere allowed you to isolate at least some of your risk</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="topic-slide">
+        <h2>The also-rans:</h2>
+        <ul>
+          <li><span class='highlight'>Node.JS</span>: Cross-request header stealing <br/>(CVE-2012-2330)</li>
+          <li><span class='highlight'>Python</span>: Remote code execution via builtin socket receive function <br/>(CVE-2014-1912)</li>
+          <li><span class='highlight'>GCC</span>: Optimizations remove checks required to avoid overflow exploits<br/>(CVE-2009-1897)</li>
+          <li><span class='highlight'>WebSockets</span>: Security bug in initial spec, when used with caching proxies</li>
+          <li><span class='highlight'>SSL/TLS</span>: BEAST/CRIME/BREACH attacks against SSL and TLS<br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)</li>
+          <li><span class='highlight'>MongoDB</span>: Overflow exploits, crashing servers with a single request <br/>(CVE-2012-6619, CVE-2013-2132)</li>
+          <li><span class='highlight'>RubyGems</span>: YAML exploit gave an external user full access to the repo</li>
+          <li><span class='highlight'>NPM</span>: Full disk exposure on NPM server with a maliciously crafted URL</li>
+        </ul>
+      </section>
+      <section data-bespoke-state="topic-slide">
+        <h2 style="text-align: left" class="full-slide">Any questions?</h2><br>
+        <address class="vcard">
+          <div class="author fn">Tim Perry</div>
+          <div class="note bio"><span>Tech Lead &amp; Open-Source Champion at </span><span class="org vcard"><a href="http://softwire.com" rel="group" class="org fn url">Softwire</a></span></div>
+          <ul class="urls">
+            <li><a href="http://tim-perry.co.uk" rel="me" class="url">tim-perry.co.uk</a></li>
+            <li><a href="http://twitter.com/pimterry" rel="me" class="nickname url">@pimterry</a></li>
+            <li><a href="http://github.com/pimterry" rel="me" class="url">github.com/pimterry</a></li>
+          </ul>
+        </address>
+        <aside>
+          <ul>
+            <li>We're recruiting!</li>
+            <li>Follow me on twitter for slides</li>
+            <li>C# stack: Windows!</li>
+            <li>DOS via a specific IPv6 packet</li>
+            <li>XMLDOM ActiveX control in every windows up to 8.1 is vulnerable to bil laughs</li>
+            <li>Mostly fairly stable otherwise, main attacks tend to be ActiveX component leftovers</li>
+            <li>Java: 35 remotely exploitable vulns fixed this month's Java SE release</li>
+            <li>4 exploits rated 10/10, but no details, includes many in JAX-WS etc</li>
+          </ul>
+        </aside>
+      </section>
+    </article>
+    <!-- build:js scripts/scripts.js-->
+    <script src="bower_components/bespoke.js/dist/bespoke.js"></script>
+    <script src="bower_components/bespoke-keys/dist/bespoke-keys.min.js"></script>
+    <script src="bower_components/bespoke-touch/dist/bespoke-touch.min.js"></script>
+    <script src="bower_components/bespoke-scale/dist/bespoke-scale.min.js"></script>
+    <script src="bower_components/bespoke-hash/dist/bespoke-hash.min.js"></script>
+    <script src="bower_components/bespoke-state/dist/bespoke-state.min.js"></script>
+    <script src="bower_components/bespoke-convenient/dist/bespoke-convenient.js"></script>
+    <script src="bower_components/bespoke-indexfinger/dist/bespoke-indexfinger.js"></script>
+    <script src="bower_components/bespoke-secondary/dist/bespoke-secondary.js"></script>
+    <script src="bower_components/prism/prism.js"></script>
+    <script src="bower_components/prism/components/prism-ruby.js"></script>
+    <script src="bower_components/prism/components/prism-php.js"></script>
+    <script src="bower_components/prism/components/prism-c.js"></script>
+    <script src="bower_components/prism/components/prism-bash.js"></script>
+    <script src="scripts/prism-yaml.js"></script>
+    <script src="scripts/main.js"></script>
+    <!-- endbuild-->
+  </body>
+</html>
