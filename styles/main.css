@@ -9,6 +9,9 @@
   article {
     background-color: #fff !important;
   }
+  *[data-bespoke-state='solution-slide'], *[data-bespoke-state='solution-slide'] * {
+    color: #000 !important;
+  }
 }
 body {
   font-family: 'Patua One', sans;
