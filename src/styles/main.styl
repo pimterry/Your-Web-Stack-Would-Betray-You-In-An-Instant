@@ -155,11 +155,6 @@ pre {
   }
 }
 
-.bespoke-active.instant {
-  transition: none;
-  background-color: #fafafa;
-}
-
 .highlight {
   font-weight: bolder;
   color: #c13038;
@@ -176,5 +171,28 @@ pre {
 *[data-bespoke-state='solution-slide'] {
   &, * {
     color: #fafafa;
+  }
+}
+
+.in-place-transition {
+  .bespoke-bullet-inactive {
+    opacity: 0;
+    display: none;
+    li & {
+      transform: translateX(0);
+    }
+  }
+
+  .bespoke-bullet-active {
+    opacity: 0;
+    display: none;
+  }
+
+  .bespoke-bullet-current,
+  // Keep the first bullet/last bullet visible, to make transitions smooth
+  .bespoke-bullet-active:last-of-type,
+  .bespoke-bullet-inactive:first-of-type {
+    opacity: 1;
+    display: inherit;
   }
 }

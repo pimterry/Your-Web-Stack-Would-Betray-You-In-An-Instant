@@ -396,27 +396,25 @@ html
       section
         h2 PHP 5.3.7
         h4 CVE-2011-3189
-        pre
-          code.language-php.
-            $salt = $user-&gt;password;
-            $hashedPasswordInput = crypt($_POST['password'], $salt);
+        ul.bullets.in-place-transition
+          li
+            pre
+              code.language-php.
+                $salt = $user-&gt;password;
+                $hashedPasswordInput = crypt($_POST['password'], $salt);
 
-            $loginOk = ($user-&gt;password === $hashedPasswordInput);
-      section.instant
-        h2 PHP 5.3.7
-        h4 CVE-2011-3189
-        pre
-          code.language-php.
-            $salt = $user-&gt;password;
-            $hashedPasswordInput = $salt;
+                $loginOk = ($user-&gt;password === $hashedPasswordInput);
+          li
+            pre
+              code.language-php.
+                $salt = $user-&gt;password;
+                $hashedPasswordInput = $salt;
 
-            $loginOk = ($user-&gt;password === $hashedPasswordInput);
-      section.instant
-        h2 PHP 5.3.7
-        h4 CVE-2011-3189
-        pre
-          code.language-php.
-            $loginOk = ($user-&gt;password === $user-&gt;password);
+                $loginOk = ($user-&gt;password === $hashedPasswordInput);
+          li
+            pre
+              code.language-php.
+                $loginOk = ($user-&gt;password === $user-&gt;password);
       section
         h2 Tests?
       section
@@ -700,6 +698,7 @@ html
     script(src='bower_components/bespoke-convenient/dist/bespoke-convenient.js')
     script(src='bower_components/bespoke-indexfinger/dist/bespoke-indexfinger.js')
     script(src='bower_components/bespoke-secondary/dist/bespoke-secondary.js')
+    script(src='scripts/bespoke-bullets.js')
     script(src='bower_components/prism/prism.js')
     script(src='bower_components/prism/components/prism-ruby.js')
     script(src='bower_components/prism/components/prism-php.js')
