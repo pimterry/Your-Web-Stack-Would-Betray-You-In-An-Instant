@@ -138,15 +138,27 @@ html
       section
         h2 YAML
 
-        pre
-          code.language-yaml.
-            ---
-            name: "Tim Perry"
-            company: "Softwire"
-            speaking: Yes
-            ears:
-             - "Left"
-             - "Right"
+        ul.bullets.in-place-transition
+          li
+            pre
+              code.language-yaml.
+                ---
+                name: "Tim Perry"
+                company: "Softwire"
+                speaking: Yes
+                ears:
+                 - "Left"
+                 - "Right"
+          li
+            pre
+              code.language-yaml.
+                --- !ruby/hash:User
+                name: "Tim Perry"
+                company: "Softwire"
+                speaking: Yes
+                ears:
+                 - "Left"
+                 - "Right"
         aside
           ul
             li Very popular in the Ruby world
@@ -154,21 +166,6 @@ html
             li *Mostly compatible* with JSON
             li *Optional braces*
             li Supports lots of extra complexity
-
-      section
-        h2 YAML
-
-        pre
-          code.language-yaml.
-            --- !ruby/hash:User
-            name: "Tim Perry"
-            company: "Softwire"
-            speaking: Yes
-            ears:
-             - "Left"
-             - "Right"
-        aside
-          ul
             li One thing it supports is types
             li User, as a hash/dict/map
             li Default Ruby YAML parser will build a User when this is parsed
