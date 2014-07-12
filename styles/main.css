@@ -131,10 +131,6 @@ pre {
 .stack .lowlight {
   opacity: 0.6;
 }
-.bespoke-active.instant {
-  transition: none;
-  background-color: #fafafa;
-}
 .highlight {
   font-weight: bolder;
   color: #c13038;
@@ -148,4 +144,21 @@ pre {
 *[data-bespoke-state='solution-slide'],
 *[data-bespoke-state='solution-slide'] * {
   color: #fafafa;
+}
+.in-place-transition .bespoke-bullet-inactive {
+  opacity: 0;
+  display: none;
+}
+li .in-place-transition .bespoke-bullet-inactive {
+  transform: translateX(0);
+}
+.in-place-transition .bespoke-bullet-active {
+  opacity: 0;
+  display: none;
+}
+.in-place-transition .bespoke-bullet-current,
+.in-place-transition .bespoke-bullet-active:last-of-type,
+.in-place-transition .bespoke-bullet-inactive:first-of-type {
+  opacity: 1;
+  display: inherit;
 }

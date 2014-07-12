@@ -53,8 +53,7 @@
         },
 
         initializeSecondaryWindowContents = function(doc) {
-            doc.body.innerHTML = "<style>body { font-size: 400%; }</style>" + 
-              "<h1>Notes</h1><div id='notes'></div>";
+            doc.body.innerHTML = "<h1>Notes</h1><div id='notes'></div>";
         },
 
         plugin = function(deck, options) {
