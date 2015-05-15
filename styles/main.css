@@ -9,9 +9,6 @@
   article {
     background-color: #fff !important;
   }
-  *[data-bespoke-state='solution-slide'], *[data-bespoke-state='solution-slide'] * {
-    color: #000 !important;
-  }
 }
 body {
   font-family: 'Patua One', sans;
@@ -34,6 +31,7 @@ body {
   text-align: left;
   font-weight: normal;
   font-family: 'Patua One', serif;
+  margin-bottom: 40px;
 }
 h2.full-slide,
 h2.fullish-slide {
@@ -53,15 +51,15 @@ ul {
   text-align: left;
 }
 address {
-  margin-top: 20px;
-  float: left;
+  font-family: 'Patua One', serif;
+  margin: 0 auto;
   text-align: right;
-  width: 100%;
+  width: 600px;
   font-style: normal;
   line-height: 150%;
 }
 address .bio {
-  opacity: 0.7;
+  color: rgba(64,64,64,0.7);
 }
 address .author {
   font-size: 120%;
@@ -70,18 +68,22 @@ address .author,
 address a {
   font-weight: bolder;
 }
+address .org {
+  color: #6ea0b0;
+}
+address .org .i {
+  color: #00548e;
+}
 address a {
   color: inherit;
 }
 address a:hover {
   font-style: underline;
 }
-address .urls {
-  padding-top: 26px;
-}
 address ul {
-  width: 100%;
+  width: 600px;
   position: relative;
+  margin: 0;
   list-style: none;
 }
 address ul li {
