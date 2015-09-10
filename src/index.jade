@@ -732,14 +732,7 @@ html
         h4 Heartbleed (CVE-2014-0160)
 
         img(src='/images/heartbleed.svg',height=350)
-        
-        ul.stack.corner
-          li.lowlight Your Code
-          li.lowlight Web Framework
-          li.lowlight Programming Language
-          li.lowlight Web Server
-          li.lowlight Database
-          li Network Infrastructure
+
         aside
           ul
             li You've heard lots about this already, I'm sure, so I'll be brief
@@ -751,6 +744,19 @@ html
             li <strong>Isolation</strong> could definitely limit the damage
             li Terminate your SSL elsewhere allowed you to isolate at least some of your risk
             li Could lose SSL certs, but no server-side only data (API keys, DB access, admin logins)
+
+      section
+        h2 OpenSSL      
+        h4 Heartbleed (CVE-2014-0160)
+        pre
+          code.language-c.
+            buffer = OPENSSL_malloc(1 + 2 + payload + padding);
+            bp = buffer;
+
+            *bp++ = TLS1_HB_RESPONSE;
+            s2n(payload, bp);
+            memcpy(bp, pl, payload);
+        aside
 
       section(data-bespoke-state='topic-slide') 
         h2 The also-rans:
@@ -779,8 +785,6 @@ html
             span Tech Lead &amp; Open-Source Champion at&nbsp;
             span.org.vcard
               a.org.fn.url(href='http://softwire.com',rel="group") Softw<span class="i">i</span>re
-
-
         aside
           ul
             li We're recruiting!
