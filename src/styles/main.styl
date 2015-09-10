@@ -124,19 +124,19 @@ address {
 pre {
   padding: 26px 20px !important;
   font-size: 16px;
-}          
+}
 
 .sideBySide {
+  display: flex;
   flex-direction: row;
-  width: 100%;
+  justify-content: space-around;
 
-  pre {
-    width: 48%;
-    margin: 0.5em 0.4em;
+  > * {
+    min-width: initial;
+    width: initial;
+    margin: 0.5em 0.4em !important;
     padding: 26px 10px;
-    font-size: 52%;
-    float: left;
-    display: inline-block;
+    font-size: 65%;
   }
 }
 

