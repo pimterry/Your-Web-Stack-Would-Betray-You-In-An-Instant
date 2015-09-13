@@ -714,6 +714,351 @@ html
             li Don't rely on one single point of failure for security
 
       section(data-bespoke-state='topic-slide')
+        h2.full-slide BIND
+        ul.stack.corner
+          li.lowlight Your Code
+          li.lowlight Web Framework
+          li.lowlight Programming Language
+          li.lowlight Web Server
+          li.lowlight Database
+          li Network Infrastructure
+
+      section
+        h2 TSIG
+
+      section
+        h2 TKEY
+
+      section
+        pre(style='font-size: 55%; width: 100%; margin: 0')
+          code.language-c.
+            dns_tkey_processquery(dns_message_t *msg, dns_tkeyctx_t *tctx, dns_tsig_keyring_t *ring) {
+              isc_result_t result = ISC_R_SUCCESS;
+              dns_rdata_tkey_t tkeyin, tkeyout;
+              isc_boolean_t freetkeyin = ISC_FALSE;
+              dns_name_t *qname, *name, *keyname, *signer, tsigner;
+              dns_fixedname_t fkeyname;
+              dns_rdataset_t *tkeyset;
+              dns_rdata_t rdata;
+              dns_namelist_t namelist;
+              char tkeyoutdata[512];
+              isc_buffer_t tkeyoutbuf;
+
+              REQUIRE(msg != NULL);
+              REQUIRE(tctx != NULL);
+              REQUIRE(ring != NULL);
+
+              ISC_LIST_INIT(namelist);
+
+              /*
+               * Interpret the question section.
+               */
+              result = dns_message_firstname(msg, DNS_SECTION_QUESTION);
+              if (result != ISC_R_SUCCESS) return (DNS_R_FORMERR);
+
+              qname = NULL;
+              dns_message_currentname(msg, DNS_SECTION_QUESTION, &qname);
+
+              /*
+               * Look for a TKEY record that matches the question.
+               */
+              tkeyset = NULL;
+              name = NULL;
+              result = dns_message_findname(msg, DNS_SECTION_ADDITIONAL, qname,
+                                            dns_rdatatype_tkey, 0, &name, &tkeyset);
+              if (result != ISC_R_SUCCESS) {
+                  /*
+                   * Try the answer section, since that's where Win2000
+                   * puts it.
+                   */
+                  if (dns_message_findname(msg, DNS_SECTION_ANSWER, qname
+                                           dns_rdatatype_tkey, 0, &name,
+                                           &amp;tkeyset) != ISC_R_SUCCESS) { 
+                      &nbsp;&nbsp;&nbsp;&nbsp;result = DNS_R_FORMERR;
+                      tkey_log("dns_tkey_processquery: couldn't find a TKEY "
+                               "matching the question");
+                      goto failure;
+                  }
+              }
+              result = dns_rdataset_first(tkeyset);
+              if (result != ISC_R_SUCCESS) {
+                  result = DNS_R_FORMERR;
+                  goto failure;
+              }
+              dns_rdata_init(&rdata);
+              dns_rdataset_current(tkeyset, &rdata);
+      
+              RETERR(dns_rdata_tostruct(&rdata, &tkeyin, NULL));
+              freetkeyin = ISC_TRUE;
+      
+              if (tkeyin.error != dns_rcode_noerror) {
+                  result = DNS_R_FORMERR;
+                  goto failure;
+              }
+      
+              /*
+               * Before we go any farther, verify that the message was signed.
+               * GSSAPI TKEY doesn't require a signature, the rest do.
+               */
+              dns_name_init(&tsigner, NULL);
+              result = dns_message_signer(msg, &tsigner);
+              if (result != ISC_R_SUCCESS) {
+                  if (tkeyin.mode == DNS_TKEYMODE_GSSAPI &&
+                      result == ISC_R_NOTFOUND)
+                          signer = NULL;
+                  else {
+                      tkey_log("dns_tkey_processquery: query was not "
+                               "properly signed - rejecting");
+                      result = DNS_R_FORMERR;
+                      goto failure;
+                  }
+              } else
+                  signer = &tsigner;
+      
+              tkeyout.common.rdclass = tkeyin.common.rdclass;
+              tkeyout.common.rdtype = tkeyin.common.rdtype;
+              ISC_LINK_INIT(&tkeyout.common, link);
+              tkeyout.mctx = msg->mctx;
+      
+              dns_name_init(&tkeyout.algorithm, NULL);
+              dns_name_clone(&tkeyin.algorithm, &tkeyout.algorithm);
+      
+              tkeyout.inception = tkeyout.expire = 0;
+              tkeyout.mode = tkeyin.mode;
+              tkeyout.error = 0;
+              tkeyout.keylen = tkeyout.otherlen = 0;
+              tkeyout.key = tkeyout.other = NULL;
+      
+              /*
+               * A delete operation must have a fully specified key name.  If this
+               * is not a delete, we do the following:
+               * if (qname != ".")
+               *      keyname = qname + defaultdomain
+               * else
+               *      keyname = <random hex> + defaultdomain
+               */
+              if (tkeyin.mode != DNS_TKEYMODE_DELETE) {
+                  dns_tsigkey_t *tsigkey = NULL;
+      
+                  if (tctx->domain == NULL && tkeyin.mode != DNS_TKEYMODE_GSSAPI) {
+                      tkey_log("dns_tkey_processquery: tkey-domain not set");
+                      result = DNS_R_REFUSED;
+                      goto failure;
+                  }
+      
+                  dns_fixedname_init(&fkeyname);
+                  keyname = dns_fixedname_name(&fkeyname);
+      
+                  if (!dns_name_equal(qname, dns_rootname)) {
+                      unsigned int n = dns_name_countlabels(qname);
+                      RUNTIME_CHECK(dns_name_copy(qname, keyname, NULL)
+                                    == ISC_R_SUCCESS);
+                      dns_name_getlabelsequence(keyname, 0, n - 1, keyname);
+                  } else {
+                      static char hexdigits[16] = {
+                          '0', '1', '2', '3', '4', '5', '6', '7',
+                          '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+                      unsigned char randomdata[16];
+                      char randomtext[32];
+                      isc_buffer_t b;
+                      unsigned int i, j;
+  
+                      result = isc_entropy_getdata(tctx->ectx,
+                                                   randomdata,
+                                                   sizeof(randomdata),
+                                                   NULL, 0);
+                      if (result != ISC_R_SUCCESS)
+                          goto failure;
+  
+                      for (i = 0, j = 0; i < sizeof(randomdata); i++) {
+                           unsigned char val = randomdata[i];
+                           randomtext[j++] = hexdigits[val >> 4];
+                           randomtext[j++] = hexdigits[val & 0xF];
+                      }
+                      isc_buffer_init(&b, randomtext, sizeof(randomtext));
+                      isc_buffer_add(&b, sizeof(randomtext));
+                      result = dns_name_fromtext(keyname, &b, NULL, 0, NULL);
+                      if (result != ISC_R_SUCCESS)
+                          goto failure;
+                  }
+      
+                  if (tkeyin.mode == DNS_TKEYMODE_GSSAPI) {
+                      /* Yup.  This is a hack */
+                      result = dns_name_concatenate(keyname, dns_rootname,
+                                                    keyname, NULL);
+                      if (result != ISC_R_SUCCESS)
+                          goto failure;
+                  } else {
+                      result = dns_name_concatenate(keyname, tctx->domain,
+                                                    keyname, NULL);
+                      if (result != ISC_R_SUCCESS)
+                          goto failure;
+                  }
+  
+                  result = dns_tsigkey_find(&tsigkey, keyname, NULL, ring);
+  
+                  if (result == ISC_R_SUCCESS) {
+                      tkeyout.error = dns_tsigerror_badname;
+                      dns_tsigkey_detach(&tsigkey);
+                          goto failure_with_tkey;
+                  } else if (result != ISC_R_NOTFOUND)
+                          goto failure;
+              } else
+                  keyname = qname;
+      
+              switch (tkeyin.mode) {
+                  case DNS_TKEYMODE_DIFFIEHELLMAN:
+                      tkeyout.error = dns_rcode_noerror;
+                      RETERR(process_dhtkey(msg, signer, keyname, &tkeyin,
+                                            tctx, &tkeyout, ring,
+                                            &namelist));
+                      break;
+                  case DNS_TKEYMODE_GSSAPI:
+                      tkeyout.error = dns_rcode_noerror;
+                      RETERR(process_gsstkey(keyname, &tkeyin, tctx,
+                                             &tkeyout, ring));
+                      break;
+                  case DNS_TKEYMODE_DELETE:
+                      tkeyout.error = dns_rcode_noerror;
+                      RETERR(process_deletetkey(signer, keyname, &tkeyin,
+                                                &tkeyout, ring));
+                      break;
+                  case DNS_TKEYMODE_SERVERASSIGNED:
+                  case DNS_TKEYMODE_RESOLVERASSIGNED:
+                      result = DNS_R_NOTIMP;
+                      goto failure;
+                  default:
+                      tkeyout.error = dns_tsigerror_badmode;
+              }
+      
+              failure_with_tkey:
+                  dns_rdata_init(&rdata);
+                  isc_buffer_init(&tkeyoutbuf, tkeyoutdata, sizeof(tkeyoutdata));
+                  result = dns_rdata_fromstruct(&rdata, tkeyout.common.rdclass,
+                                                tkeyout.common.rdtype, &tkeyout,
+                                                &tkeyoutbuf);
+          
+                  if (freetkeyin) {
+                      dns_rdata_freestruct(&tkeyin);
+                      freetkeyin = ISC_FALSE;
+                  }
+          
+                  if (tkeyout.key != NULL)
+                      isc_mem_put(tkeyout.mctx, tkeyout.key, tkeyout.keylen);
+                  if (tkeyout.other != NULL)
+                      isc_mem_put(tkeyout.mctx, tkeyout.other, tkeyout.otherlen);
+                  if (result != ISC_R_SUCCESS)
+                      goto failure;
+          
+                  RETERR(add_rdata_to_list(msg, keyname, &rdata, 0, &namelist));
+          
+                  RETERR(dns_message_reply(msg, ISC_TRUE));
+          
+                  name = ISC_LIST_HEAD(namelist);
+                  while (name != NULL) {
+                      dns_name_t *next = ISC_LIST_NEXT(name, link);
+                      ISC_LIST_UNLINK(namelist, name, link);
+                      dns_message_addname(msg, name, DNS_SECTION_ANSWER);
+                      name = next;
+                  }
+          
+                  return (ISC_R_SUCCESS);
+          
+              failure:
+                  if (freetkeyin)
+                      dns_rdata_freestruct(&tkeyin);
+                  if (!ISC_LIST_EMPTY(namelist))
+                      free_namelist(msg, &namelist);
+                  return (result);
+            }
+        aside
+
+      section
+        pre(style='font-size: 80%; width: 100%; margin: 0')
+          code.language-c.
+            /*
+             * Look for a TKEY record that matches the question.
+             */
+            tkeyset = NULL;
+            name = NULL;
+            result = dns_message_findname(msg, DNS_SECTION_ADDITIONAL, qname,
+                                          dns_rdatatype_tkey, 0, &name, &tkeyset);
+            if (result != ISC_R_SUCCESS) {
+                /*
+                 * Try the answer section, since that's where Win2000
+                 * puts it.
+                 */
+                if (dns_message_findname(msg, DNS_SECTION_ANSWER, qname
+                                         dns_rdatatype_tkey, 0, &name,
+                                         &amp;tkeyset) != ISC_R_SUCCESS) { 
+                    &nbsp;&nbsp;&nbsp;&nbsp;result = DNS_R_FORMERR;
+                    tkey_log("dns_tkey_processquery: couldn't find a TKEY "
+                             "matching the question");
+                    goto failure;
+                }
+            }
+        aside
+
+      section
+        pre(style='font-size: 80%; width: 100%; margin: 0')
+          code.language-c.
+            dns_message_findname(dns_message_t *msg, dns_section_t section,
+                                 dns_name_t *target, dns_rdatatype_t type,
+                                 dns_rdatatype_t covers, dns_name_t **name,
+                                 dns_rdataset_t **rdataset)
+            {
+              dns_name_t *foundname;
+              isc_result_t result;
+      
+              /*
+               * XXX These requirements are probably too intensive, especially
+               * where things can be NULL, but as they are they ensure that if
+               * something is NON-NULL, indicating that the caller expects it
+               * to be filled in, that we can in fact fill it in.
+               */
+              REQUIRE(msg != NULL);
+              REQUIRE(VALID_SECTION(section));
+              REQUIRE(target != NULL);
+              if (name != NULL) REQUIRE(*name == NULL);
+              if (type == dns_rdatatype_any) {
+                REQUIRE(rdataset == NULL);
+              } else {
+                if (rdataset != NULL) REQUIRE(*rdataset == NULL);
+              }
+      
+              result = findname(&foundname, target,
+                                &msg->sections[section]);
+      
+              if (result == ISC_R_NOTFOUND)
+                return (DNS_R_NXDOMAIN);
+              else if (result != ISC_R_SUCCESS)
+                return (result);
+      
+              if (name != NULL)
+                *name = foundname;
+      
+              /*
+               * And now look for the type.
+               */
+              if (type == dns_rdatatype_any)
+                return (ISC_R_SUCCESS);
+      
+              result = dns_message_findtype(foundname, type, covers, rdataset);
+              if (result == ISC_R_NOTFOUND)
+                return (DNS_R_NXRRSET);
+      
+              return (result);
+            }
+        aside
+                  
+      
+      section(data-bespoke-state='solution-slide')
+        h2.full-slide
+          | Avoid
+          br
+          | Complexity
+
+      section(data-bespoke-state='topic-slide')
         h4 Nothing is really secure, but
         h2.full-slide Don't Panic
         ul.conclusions
@@ -722,6 +1067,7 @@ html
           li Value best practices
           li Keep errors secret
           li Isolate your components
+          li Avoid complexity
         aside
           ul
             li If nothing else, watch for security notices, be ready to update <em>fast</em>
