@@ -543,7 +543,7 @@ html
 
 
       section
-        h2 CVE-2015-2080
+        h4 CVE-2015-2080
         ul.bullets.in-place-transition
           li
             div.sideBySide
@@ -604,6 +604,15 @@ html
           ul
             li We can use this to see bits of other people's requests          
             li And with minor fiddling, we can find the relevant bit of request we're looking for
+
+      section
+        h2 Fixed        
+        pre
+          code.language-bash.
+            HTTP/1.1 400 Illegal character 0xc2
+            Content-Length: 0
+            Connection: close
+            Server: Jetty(9.2.8.v20150217)
 
       section(data-bespoke-state='solution-slide')
         h2.full-slide
