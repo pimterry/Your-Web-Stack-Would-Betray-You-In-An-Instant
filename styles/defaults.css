@@ -215,7 +215,7 @@ li.bespoke-bullet-inactive {
   background: #eaeaea;
 }
 pre {
-  padding: 26px !important;
+  padding: 26px;
   -webkit-border-radius: 8px;
   border-radius: 8px;
 }

@@ -38,6 +38,7 @@
             <li>Often assumed you're not worth attacking</li>
             <li>Opportunistic attackers, looking for easy security holes</li>
             <li>Platform for virus and malware distribution, phishing, for further attacks elsewhere.</li>
+            <li>We're going to look at some examples</li>
           </ul>
         </aside>
       </section>
@@ -49,7 +50,7 @@
           <li>Programming Language</li>
           <li>Web Server</li>
           <li>Database</li>
-          <li>Network Transport</li>
+          <li>Network Infrastructure</li>
         </ul>
         <aside>
           <ul>
@@ -80,7 +81,7 @@
           <li>Programming Language</li>
           <li>Web Server</li>
           <li>Database</li>
-          <li>Network Transport        </li>
+          <li>Network Infrastructure        </li>
         </ul>
         <aside>
           <ul>
@@ -119,7 +120,7 @@
           <li class="lowlight">Programming Language</li>
           <li class="lowlight">Web Server</li>
           <li class="lowlight">Database</li>
-          <li class="lowlight">Network Transport</li>
+          <li class="lowlight">Network Infrastructure</li>
         </ul>
         <aside>
           <ul>
@@ -327,7 +328,7 @@ end
           <li>Programming Language</li>
           <li class="lowlight">Web Server</li>
           <li class="lowlight">Database</li>
-          <li class="lowlight">Network Transport</li>
+          <li class="lowlight">Network Infrastructure</li>
         </ul>
       </section>
       <section>
@@ -377,6 +378,30 @@ $loginOk = ($user-&gt;password === $hashedPasswordInput);</code></pre>
         </aside>
       </section>
       <section>
+        <h2>Strings</h2>
+        <ul class="bullets in-place-transition">
+          <li><img src="images/modern-string.png" style="width: 560px; margin: 30px 0 0 -35px"></li>
+          <li><img src="images/modern-string-details.png" style="width: 560px; margin: 30px 0 0 -35px"></li>
+          <li><img src="images/c-string.png" style="width: 560px; margin: 30px 0 0 -35px"></li>
+        </ul>
+      </section>
+      <section>
+        <h2>PHP 5.3.7</h2>
+        <pre style="font-size: 24px"><code class="language-c"></code><span style="color: #f77"><code class="language-c"></code>- strncat(passwd, "$", 1);</span><br><span style="color: #7f7"><code class="language-c"></code>+ strlcat(passwd, "$", 1);</span></pre>
+      </section>
+      <section>
+        <h2>String concatenation</h2>
+        <ul class="bullets in-place-transition">
+          <li>
+            <pre style="font-size: 200%;"><code class="language-c">strncat(passwd, "$", 1)</code></pre><img src="images/strncat.svg" style="width: 500px; height: 98px; margin: 30px">
+          </li>
+          <li>
+            <pre style="font-size: 200%;"><code class="language-c">strlcat(passwd, "$", 1)
+</code></pre><img src="images/strlcat.svg" style="width: 500px; height: 98px; margin: 30px">
+          </li>
+        </ul>
+      </section>
+      <section>
         <h2>PHP 5.3.7</h2>
         <h4>CVE-2011-3189</h4>
         <pre><code class="language-php">crypt($password, $salt) === $salt</code></pre>
@@ -409,80 +434,157 @@ $loginOk = ($user-&gt;password === $hashedPasswordInput);</code></pre>
         <h2>Reported?</h2>
       </section>
       <section data-bespoke-state="solution-slide">
-        <h2 class="full-slide">Best Practices Matter</h2>
+        <h2 class="full-slide">Value<br>Best<br>Practices</h2>
       </section>
       <section data-bespoke-state="topic-slide">
-        <h2 class="full-slide">Apache</h2>
+        <h2 class="full-slide">Jetty</h2>
         <ul class="stack corner">
           <li class="lowlight">Your Code</li>
           <li class="lowlight">Web Framework</li>
           <li class="lowlight">Programming Language</li>
           <li>Web Server</li>
           <li class="lowlight">Database</li>
-          <li class="lowlight">Network Transport</li>
+          <li class="lowlight">Network Infrastructure</li>
         </ul>
-      </section>
-      <section>
-        <h2>HTTP Range Headers</h2>
-        <pre><code class="language-bash">GET /video.mp4 HTTP/1.1
-Range: bytes=0-100
-
-HTTP/1.1 206 Partial Content
-Content-Type: video/mp4
-Content-Length: 101
-Accept-Ranges: bytes
-Content-Range: bytes 0-100/123456
-
-&#65533;&#65533;&#65533;123&#65533;asdasd&#65533;89&#65533;2&#65533;b&#65533;B%99D[...]
-</code></pre>
-      </section>
-      <section>
-        <h2>HTTP Range Headers</h2>
-        <pre style="padding: 10px 20px !important"><code class="language-bash">GET /video.mp4 HTTP/1.1
-Range: bytes=0-100,200-300
-
-HTTP/1.1 206 Partial Content
-Content-Type: multipart/byteranges; boundary=qwe123
-Content-Length: 330
-Accept-Ranges: bytes
-
---qwe123
-Content-Type: video/mp4
-Content-Range: bytes 0-100/123456
-
-&#65533;&#65533;&#65533;123&#65533;asdasd&#65533;89&#65533;2&#65533;b&#65533;B%99D[...]
---qwe123
-Content-Type: video/mp4
-Content-Range: bytes 200-300/123456
-
-&#65533;&#65533;&#65533;&#65533;9d0cd&#65533;FFFFF?!FFFF&#65533;&#65533;&#65533;"X[...]</code></pre>
-        <aside></aside>
-      </section>
-      <section>
-        <h2>Apache</h2>
-        <h4>Apache Killer (CVE-2011-3192)</h4>
-        <pre><code class="language-bash">HEAD /video.mp4 HTTP/1.1
-Range: bytes=0-,0-1,0-2,0-3,0-4,0-5,0-6,0-7,0-8,0-9,
-  0-10,0-11,0-12,0-13,0-14,0-10,0-16,0-17,0-18,[...]
-  0-1294,0-1295,0-1296,0-1297,0-1298,0-1299
-Accept-Encoding: gzip
-
-...</code></pre>
         <aside>
           <ul>
-            <li>Request many overlapping ranges</li>
-            <li>8KB per header: 1299 ranges</li>
-            <li>Expensive on IIS</li>
-            <li>+ large TCP window, to extend the damage</li>
-            <li>Apache implementation creates n^2 buckets to hold per-range data, not n</li>
-            <li>GZIP is not required, but adds extra hurt too</li>
-            <li>Uses all the CPU and memory of a server fairly quickly</li>
-            <li>Your code: watch out for non-linear unbounded complexity from user input</li>
+            <li>We're all using a web server, Apache, Tomcat, Jetty, IIS</li>
+            <li>Jetty particularly is growing rapidly in the modern Java community            </li>
+            <li>Like Nancy in the C# world</li>
           </ul>
         </aside>
       </section>
+      <section>
+        <h2>HTTP</h2>
+        <pre><code class="language-bash">GET / HTTP/1.1
+Host: localhost:8080
+Accept: text/html
+Cookie: password=secret
+</code></pre>
+        <aside>
+          <ul>
+            <li>This is a simple HTTP request Jetty might receive</li>
+            <li>Has a series of headers with keys and values</li>
+            <li>Some of which contain secrets, typically the cookies particularly</li>
+            <li>Potentially also the request body too though, containing valuables</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Bad HTTP</h2>
+        <pre><code class="language-bash">GET / HTTP/1.1
+Host: localhost:8080
+Accept&#174;: text/html
+</code></pre>
+        <aside>
+          <ul>
+            <li>This is an invalid HTTP request</li>
+            <li>&169; is binary 169, and that's not a legal character in an HTTP header name</li>
+            <li>Jetty follows the RFCs for this and (like most web servers) rejects this request.</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Bad HTTP</h2>
+        <pre><code class="language-bash">HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
+   'GET / HTTP/1.1
+    H...t:8080
+    Accept\xC2<<<\xAe: text/html
+    
+    >>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+    \x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00
+    \x00\x00\x00\x00\x00\x00\x00\x00'
+Content-Length: 0
+Connection: close
+Server: Jetty(9.2.8.v20150217)</code></pre>
+        <aside>
+          <ul>
+            <li>In that case, with the version of Jetty released in February, we get a response like this.</li>
+            <li>Error message containing the request content and highlighting the bad character</li>
+            <li>There's an issue with this though</li>
+            <li>What're those zeros?</li>
+            <li>They're the rest of the contents of the buffer</li>
+            <li>This is printed by a general purpose 'toDebugString(buffer)' method</li>
+            <li>Prints the content in a buffer, highlighting a part, and providing context</li>
+            <li>This sounds fine, just messy, but is actually a huge disaster: these buffers are reused by all requests</li>
+            <li>If the previous request was longer than this one, we can read a chunk of data out of it</li>
+            <li>Can change which data by progressively increasing how far down our request the bad character comes</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h4>CVE-2015-2080</h4>
+        <ul class="bullets in-place-transition">
+          <li>
+            <div class="sideBySide">
+              <pre style="align-self: flex-start;"><code class="language-bash">GET / HTTP/1.1
+Host: localhost:8080
+Accept: text/html
+Cookie: password=secret</code></pre>
+              <pre><code class="language-bash">GET / HTTP/1.1
+Host: localhost:8080
+Accept®: text/html
+
+
+HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
+ 'GET / HTTP/1.1
+  H...t:8080
+  Accept\xC2<<<\xAe: text/html
+  
+  >>>ie: password=secr...\x00\x00\x00\x00\x00
+  \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+Content-Length: 0
+Connection: close
+Server: Jetty(9.2.8.v20150217)
+
+
+</code></pre>
+            </div>
+          </li>
+          <li>
+            <div class="sideBySide">
+              <pre style="align-self: flex-start;"><code class="language-bash">GET / HTTP/1.1
+Host: localhost:8080
+Accept: text/html
+Cookie: password=secret</code></pre>
+              <pre><code class="language-bash">GET / HTTP/1.1
+Host: localhost:8080
+Accept®: text/htmlQQQQ
+
+
+HTTP/1.1 400 Illegal character 0xc2 in state=HEADER_IN_NAME in 
+ 'GET / HTTP/1.1
+  H...t:8080
+  Accept\xC2<<<\xAe: text/htmlQQQQ
+  
+  >>>password=secret
+  
+  ...\x00\x00\x00\x00\x00
+  \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+Content-Length: 0
+Connection: close
+Server: Jetty(9.2.8.v20150217)</code></pre>
+            </div>
+          </li>
+        </ul>
+        <aside>
+          <ul>
+            <li>We can use this to see bits of other people's requests          </li>
+            <li>And with minor fiddling, we can find the relevant bit of request we're looking for</li>
+            <li>Live for 6 months, from September last year until the end of February</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>Fixed        </h2>
+        <pre><code class="language-bash">HTTP/1.1 400 Illegal character 0xc2
+Content-Length: 0
+Connection: close
+Server: Jetty(9.2.9.v20150224)
+</code></pre>
+      </section>
       <section data-bespoke-state="solution-slide">
-        <h2 class="full-slide">Features<br>Add Risk</h2>
+        <h2 class="full-slide">Keep<br>Errors<br>Secret</h2>
       </section>
       <section data-bespoke-state="topic-slide">
         <h2 class="full-slide">PostgreSQL</h2>
@@ -492,7 +594,7 @@ Accept-Encoding: gzip
           <li class="lowlight">Programming Language</li>
           <li class="lowlight">Web Server</li>
           <li>Database</li>
-          <li class="lowlight">Network Transport</li>
+          <li class="lowlight">Network Infrastructure</li>
         </ul>
       </section>
       <section>
@@ -568,7 +670,7 @@ Hello</code></pre>
         <h2>So?</h2>
         <aside>
           <ul>
-            <li>1.4 million connectable postgres's, as of this morning</li>
+            <li>450000 connectable postgres's on the default port</li>
             <li>Sometimes for convenience, relying on postgres' own security</li>
             <li>Sometimes for distributed infrastructure</li>
             <li>All in hilarious danger</li>
@@ -576,7 +678,7 @@ Hello</code></pre>
         </aside>
       </section>
       <section data-bespoke-state="solution-slide">
-        <h2 class="fullish-slide">Isolate Your Infrastructure</h2>
+        <h2 class="fullish-slide">Isolate Your Components</h2>
         <h3>(From itself, and everyone else)</h3>
         <aside>
           <ul>
@@ -590,15 +692,440 @@ Hello</code></pre>
         </aside>
       </section>
       <section data-bespoke-state="topic-slide">
+        <h2 class="full-slide">BIND</h2>
+        <ul class="stack corner">
+          <li class="lowlight">Your Code</li>
+          <li class="lowlight">Web Framework</li>
+          <li class="lowlight">Programming Language</li>
+          <li class="lowlight">Web Server</li>
+          <li class="lowlight">Database</li>
+          <li>Network Infrastructure</li>
+        </ul>
+        <aside>
+          <ul>
+            <li>Who thinks they know how DNS works?</li>
+            <li>Berkley Internet Name Daemon</li>
+            <li>85% market share</li>
+            <li>Almost every page you open probably involved a request to BIND at some stage</li>
+            <li>Similarly, every user that you have probably uses BIND to find you</li>
+            <li>It's generally not a good idea to run your own nameservers</li>
+            <li>But that doesn't mean they're not a part of your system</li>
+            <li>Can be made vulnerable by their failures: phishing</li>
+            <li>Nobody looks at certs</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>TSIG</h2>
+        <h4>RFC 2845</h4>
+        <aside>
+          <ul>
+            <li>For a long time DNS was essentially unsecured</li>
+            <li>DNS cache poisoning and MitM generally a big problem, DNSSEC/DNSCurve</li>
+            <li>Fundamentally a distributed database</li>
+            <li>Needs secure methods for internal replication of transactions too</li>
+            <li>Has to be more lightweight than full public/private key auth process, for when that's useful (2000 originally)</li>
+            <li>TSIG is that: signing requests for zone transfers and dynamic DNS updates</li>
+            <li>Secondary DNS servers updating their caches for their zone</li>
+            <li>Full zone transfer includes all domains</li>
+            <li>Potentially gives away details about internal infrastructure</li>
+            <li>Also useful for machines that move around a lot, but want a DNS name anyway</li>
+            <li>Symmetric shared keys used</li>
+            <li>Need to distribute keys. Typically done out-of-band.</li>
+            <li>One of many ways to do this sort of thing, DNS is complicated</li>
+            <li>TSIG is not really the go-to solution for this now: DNSSEC and similar, lots of competition</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>TKEY</h2>
+        <h4>RFC 2930</h4>
+        <aside>
+          <ul>
+            <li>If you do want to do TSIG, sharing keys is a bit of hassle</li>
+            <li>TKEY is a DNS record type, like an A record or a CNAME</li>
+            <li>A TKEY record contains some key data, and a bunch of metadata</li>
+            <li>Obviously this can't just be a server giving out it's secret keys</li>
+            <li>Lots of modes. Can verify requests in various ways, can provide GSSAPI and all sorts</li>
+            <li>Often used with diffie-hellman setup, so there's no public information</li>
+            <li>Diffie Hellman used for agreeing on a shared secret between two servers without any preceeding information, or ever exposing the keys over the wire</li>
+            <li>Bit like magic, well worth a read</li>
+            <li>But essentially, this is key distribution infrastructure for a corner case of a minor feature nobody uses.</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <pre style="font-size: 55%; width: 100%; margin: 0"><code class="language-c">dns_tkey_processquery(dns_message_t *msg, dns_tkeyctx_t *tctx, dns_tsig_keyring_t *ring) {
+  isc_result_t result = ISC_R_SUCCESS;
+  dns_rdata_tkey_t tkeyin, tkeyout;
+  isc_boolean_t freetkeyin = ISC_FALSE;
+  dns_name_t *qname, *name, *keyname, *signer, tsigner;
+  dns_fixedname_t fkeyname;
+  dns_rdataset_t *tkeyset;
+  dns_rdata_t rdata;
+  dns_namelist_t namelist;
+  char tkeyoutdata[512];
+  isc_buffer_t tkeyoutbuf;
+  
+  REQUIRE(msg != NULL);
+  REQUIRE(tctx != NULL);
+  REQUIRE(ring != NULL);
+  
+  ISC_LIST_INIT(namelist);
+  
+  /*
+   * Interpret the question section.
+   */
+  result = dns_message_firstname(msg, DNS_SECTION_QUESTION);
+  if (result != ISC_R_SUCCESS) return (DNS_R_FORMERR);
+  
+  qname = NULL;
+  dns_message_currentname(msg, DNS_SECTION_QUESTION, &qname);
+  
+  /*
+   * Look for a TKEY record that matches the question.
+   */
+  tkeyset = NULL;
+  name = NULL;
+  result = dns_message_findname(msg, DNS_SECTION_ADDITIONAL, qname,
+                                dns_rdatatype_tkey, 0, &name, &tkeyset);
+  if (result != ISC_R_SUCCESS) {
+      /*
+       * Try the answer section, since that's where Win2000
+       * puts it.
+       */
+      if (dns_message_findname(msg, DNS_SECTION_ANSWER, qname
+                               dns_rdatatype_tkey, 0, &name,
+                               &amp;tkeyset) != ISC_R_SUCCESS) { 
+      &nbsp;&nbsp;&nbsp;&nbsp;result = DNS_R_FORMERR;
+          tkey_log("dns_tkey_processquery: couldn't find a TKEY "
+                   "matching the question");
+          goto failure;
+      }
+  }
+  result = dns_rdataset_first(tkeyset);
+  if (result != ISC_R_SUCCESS) {
+      result = DNS_R_FORMERR;
+      goto failure;
+  }
+  dns_rdata_init(&rdata);
+  dns_rdataset_current(tkeyset, &rdata);
+  
+  RETERR(dns_rdata_tostruct(&rdata, &tkeyin, NULL));
+  freetkeyin = ISC_TRUE;
+  
+  if (tkeyin.error != dns_rcode_noerror) {
+      result = DNS_R_FORMERR;
+      goto failure;
+  }
+  
+  /*
+   * Before we go any farther, verify that the message was signed.
+   * GSSAPI TKEY doesn't require a signature, the rest do.
+   */
+  dns_name_init(&tsigner, NULL);
+  result = dns_message_signer(msg, &tsigner);
+  if (result != ISC_R_SUCCESS) {
+      if (tkeyin.mode == DNS_TKEYMODE_GSSAPI &&
+          result == ISC_R_NOTFOUND)
+              signer = NULL;
+      else {
+          tkey_log("dns_tkey_processquery: query was not "
+                   "properly signed - rejecting");
+          result = DNS_R_FORMERR;
+          goto failure;
+      }
+  } else
+      signer = &tsigner;
+      
+  tkeyout.common.rdclass = tkeyin.common.rdclass;
+  tkeyout.common.rdtype = tkeyin.common.rdtype;
+  ISC_LINK_INIT(&tkeyout.common, link);
+  tkeyout.mctx = msg->mctx;
+  
+  dns_name_init(&tkeyout.algorithm, NULL);
+  dns_name_clone(&tkeyin.algorithm, &tkeyout.algorithm);
+  
+  tkeyout.inception = tkeyout.expire = 0;
+  tkeyout.mode = tkeyin.mode;
+  tkeyout.error = 0;
+  tkeyout.keylen = tkeyout.otherlen = 0;
+  tkeyout.key = tkeyout.other = NULL;
+  
+  /*
+   * A delete operation must have a fully specified key name.  If this
+   * is not a delete, we do the following:
+   * if (qname != ".")
+   *      keyname = qname + defaultdomain
+   * else
+   *      keyname = <random hex> + defaultdomain
+   */
+  if (tkeyin.mode != DNS_TKEYMODE_DELETE) {
+      dns_tsigkey_t *tsigkey = NULL;
+      
+      if (tctx->domain == NULL && tkeyin.mode != DNS_TKEYMODE_GSSAPI) {
+          tkey_log("dns_tkey_processquery: tkey-domain not set");
+          result = DNS_R_REFUSED;
+          goto failure;
+      }
+      
+      dns_fixedname_init(&fkeyname);
+      keyname = dns_fixedname_name(&fkeyname);
+      
+      if (!dns_name_equal(qname, dns_rootname)) {
+          unsigned int n = dns_name_countlabels(qname);
+          RUNTIME_CHECK(dns_name_copy(qname, keyname, NULL)
+                        == ISC_R_SUCCESS);
+          dns_name_getlabelsequence(keyname, 0, n - 1, keyname);
+      } else {
+          static char hexdigits[16] = {
+              '0', '1', '2', '3', '4', '5', '6', '7',
+              '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+          unsigned char randomdata[16];
+          char randomtext[32];
+          isc_buffer_t b;
+          unsigned int i, j;
+          
+          result = isc_entropy_getdata(tctx->ectx,
+                                       randomdata,
+                                       sizeof(randomdata),
+                                       NULL, 0);
+          if (result != ISC_R_SUCCESS)
+              goto failure;
+              
+          for (i = 0, j = 0; i < sizeof(randomdata); i++) {
+               unsigned char val = randomdata[i];
+               randomtext[j++] = hexdigits[val >> 4];
+               randomtext[j++] = hexdigits[val & 0xF];
+          }
+          isc_buffer_init(&b, randomtext, sizeof(randomtext));
+          isc_buffer_add(&b, sizeof(randomtext));
+          result = dns_name_fromtext(keyname, &b, NULL, 0, NULL);
+          if (result != ISC_R_SUCCESS)
+              goto failure;
+      }
+      
+      if (tkeyin.mode == DNS_TKEYMODE_GSSAPI) {
+          /* Yup.  This is a hack */
+          result = dns_name_concatenate(keyname, dns_rootname,
+                                        keyname, NULL);
+          if (result != ISC_R_SUCCESS)
+              goto failure;
+      } else {
+          result = dns_name_concatenate(keyname, tctx->domain,
+                                        keyname, NULL);
+          if (result != ISC_R_SUCCESS)
+              goto failure;
+      }
+      
+      result = dns_tsigkey_find(&tsigkey, keyname, NULL, ring);
+      
+      if (result == ISC_R_SUCCESS) {
+          tkeyout.error = dns_tsigerror_badname;
+          dns_tsigkey_detach(&tsigkey);
+              goto failure_with_tkey;
+      } else if (result != ISC_R_NOTFOUND)
+              goto failure;
+  } else
+      keyname = qname;
+      
+  switch (tkeyin.mode) {
+      case DNS_TKEYMODE_DIFFIEHELLMAN:
+          tkeyout.error = dns_rcode_noerror;
+          RETERR(process_dhtkey(msg, signer, keyname, &tkeyin,
+                                tctx, &tkeyout, ring,
+                                &namelist));
+          break;
+      case DNS_TKEYMODE_GSSAPI:
+          tkeyout.error = dns_rcode_noerror;
+          RETERR(process_gsstkey(keyname, &tkeyin, tctx,
+                                 &tkeyout, ring));
+          break;
+      case DNS_TKEYMODE_DELETE:
+          tkeyout.error = dns_rcode_noerror;
+          RETERR(process_deletetkey(signer, keyname, &tkeyin,
+                                    &tkeyout, ring));
+          break;
+      case DNS_TKEYMODE_SERVERASSIGNED:
+      case DNS_TKEYMODE_RESOLVERASSIGNED:
+          result = DNS_R_NOTIMP;
+          goto failure;
+      default:
+          tkeyout.error = dns_tsigerror_badmode;
+  }
+  
+  failure_with_tkey:
+      dns_rdata_init(&rdata);
+      isc_buffer_init(&tkeyoutbuf, tkeyoutdata, sizeof(tkeyoutdata));
+      result = dns_rdata_fromstruct(&rdata, tkeyout.common.rdclass,
+                                    tkeyout.common.rdtype, &tkeyout,
+                                    &tkeyoutbuf);
+                                    
+      if (freetkeyin) {
+          dns_rdata_freestruct(&tkeyin);
+          freetkeyin = ISC_FALSE;
+      }
+      
+      if (tkeyout.key != NULL)
+          isc_mem_put(tkeyout.mctx, tkeyout.key, tkeyout.keylen);
+      if (tkeyout.other != NULL)
+          isc_mem_put(tkeyout.mctx, tkeyout.other, tkeyout.otherlen);
+      if (result != ISC_R_SUCCESS)
+          goto failure;
+          
+      RETERR(add_rdata_to_list(msg, keyname, &rdata, 0, &namelist));
+      
+      RETERR(dns_message_reply(msg, ISC_TRUE));
+      
+      name = ISC_LIST_HEAD(namelist);
+      while (name != NULL) {
+          dns_name_t *next = ISC_LIST_NEXT(name, link);
+          ISC_LIST_UNLINK(namelist, name, link);
+          dns_message_addname(msg, name, DNS_SECTION_ANSWER);
+          name = next;
+      }
+      
+      return (ISC_R_SUCCESS);
+      
+  failure:
+      if (freetkeyin)
+          dns_rdata_freestruct(&tkeyin);
+      if (!ISC_LIST_EMPTY(namelist))
+          free_namelist(msg, &namelist);
+      return (result);
+}</code></pre>
+        <aside>
+          <ul>
+            <li>This is the TKEY query processing implementation</li>
+            <li>Takes a request for a key, tries to find the key, sends a response back with it, if you're allowed it</li>
+            <li>It's quite complicated. It's also broken</li>
+            <li>How would you start trying to audit this? Any idea where the catastrophic bug is?</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <pre style="font-size: 80%; width: 100%; margin: 0"><code class="language-c">/*
+ * Look for a TKEY record that matches the question.
+ */
+tkeyset = NULL;
+name = NULL;
+result = dns_message_findname(msg, DNS_SECTION_ADDITIONAL, qname,
+                              dns_rdatatype_tkey, 0, &name, &tkeyset);
+if (result != ISC_R_SUCCESS) {
+    /*
+     * Try the answer section, since that's where Win2000
+     * puts it.
+     */
+    if (dns_message_findname(msg, DNS_SECTION_ANSWER, qname
+                             dns_rdatatype_tkey, 0, &name,
+                             &amp;tkeyset) != ISC_R_SUCCESS) { 
+    &nbsp;&nbsp;&nbsp;&nbsp;result = DNS_R_FORMERR;
+        tkey_log("dns_tkey_processquery: couldn't find a TKEY "
+                 "matching the question");
+        goto failure;
+    }
+}</code></pre>
+        <aside>
+          <ul>
+            <li>Let's make it easier. It's in this bit, where we go find the record</li>
+            <li>Any idea?</li>
+            <li>Here we've got a request for a TKEY record with a certain name</li>
+            <li>We look in the ADDITIONAL section for record names, and search for those in all our TKEY data</li>
+            <li>If that fails, we look in the ANSWER section of the requestm because that's what Win2000 incorrectly does</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <pre style="font-size: 80%; width: 100%; margin: 0"><code class="language-c">dns_message_findname(dns_message_t *msg, dns_section_t section,
+                     dns_name_t *target, dns_rdatatype_t type,
+                     dns_rdatatype_t covers, dns_name_t **name,
+                     dns_rdataset_t **rdataset)
+{
+  dns_name_t *foundname;
+  isc_result_t result;
+  
+  /*
+   * XXX These requirements are probably too intensive, especially
+   * where things can be NULL, but as they are they ensure that if
+   * something is NON-NULL, indicating that the caller expects it
+   * to be filled in, that we can in fact fill it in.
+   */
+  REQUIRE(msg != NULL);
+  REQUIRE(VALID_SECTION(section));
+  REQUIRE(target != NULL);
+  if (name != NULL) REQUIRE(*name == NULL);
+  if (type == dns_rdatatype_any) {
+    REQUIRE(rdataset == NULL);
+  } else {
+    if (rdataset != NULL) REQUIRE(*rdataset == NULL);
+  }
+  
+  result = findname(&foundname, target,
+                    &msg->sections[section]);
+                    
+  if (result == ISC_R_NOTFOUND)
+    return (DNS_R_NXDOMAIN);
+  else if (result != ISC_R_SUCCESS)
+    return (result);
+    
+  if (name != NULL)
+    *name = foundname;
+    
+  /*
+   * And now look for the type.
+   */
+  if (type == dns_rdatatype_any)
+    return (ISC_R_SUCCESS);
+    
+  result = dns_message_findtype(foundname, type, covers, rdataset);
+  if (result == ISC_R_NOTFOUND)
+    return (DNS_R_NXRRSET);
+    
+  return (result);
+}</code></pre>
+        <aside></aside>
+      </section>
+      <section data-bespoke-state="solution-slide">
+        <h2 class="full-slide">Avoid<br>Complexity</h2>
+        <aside>
+          <ul>
+            <li>This is all really complicated</li>
+            <li>You think it's hard to follow, imagine trying to explain it</li>
+            <li>DNS is a complicated system</li>
+            <li>BIND tries to support all of it in every case all the time though</li>
+            <li>137 RFCs listed on their site, as their 'spec'. Plus workarounds, patches, their own features, etc</li>
+            <li>TSIG and TKEY are not important features in many cases.</li>
+            <li>Support for Windows 2000 sending you updates even less so (~0.01% market share, end of life 5 years ago)</li>
+            <li>Complexity makes things like this hard to remove</li>
+            <li>Should all definitely be disablable, probably external plugins</li>
+            <li></li>
+            <li>Generally smacks of control plane/data plane confusion</li>
+            <li>Cloudflare DNS proxy solves, interestingly: doesn't allow updates.</li>
+            <li>Why on earth would you tie updates to the core structure of the internet directly to the most basic lookup operation of the entire internet?</li>
+            <li></li>
+            <li>Found by fuzzer by security researcher</li>
+            <li>Could've been absolutely catastophic</li>
+            <li></li>
+            <li>Prefer systems that are implemented and structured simply internally</li>
+            <li>Aim for that too, whether you're building your own or major tool code</li>
+            <li>Prefer systems that do what you need, and no more</li>
+            <li>Less is more</li>
+          </ul>
+        </aside>
+      </section>
+      <section data-bespoke-state="topic-slide">
         <h4>Nothing is really secure, but</h4>
         <h2 class="full-slide">Don't Panic</h2>
-        <ul class="conclusions">
-          <li>Be ready to update</li>
-          <li>Fear user input</li>
-          <li>Best practices matter</li>
-          <li>Features add risk</li>
-          <li>Isolate your infrastructure</li>
-        </ul>
+        <h3 class="conclusions">
+          <ul>
+            <li>Be ready to update</li>
+            <li>Fear user input</li>
+            <li>Value best practices</li>
+            <li>Keep errors secret</li>
+            <li>Isolate your components</li>
+            <li>Avoid complexity</li>
+          </ul>
+        </h3>
         <aside>
           <ul>
             <li>If nothing else, watch for security notices, be ready to update <em>fast</em></li>
@@ -612,14 +1139,6 @@ Hello</code></pre>
       <section data-bespoke-state="topic-slide">
         <h2>OpenSSL</h2>
         <h4>Heartbleed (CVE-2014-0160)</h4><img src="images/heartbleed.svg" height="350">
-        <ul class="stack corner">
-          <li class="lowlight">Your Code</li>
-          <li class="lowlight">Web Framework</li>
-          <li class="lowlight">Programming Language</li>
-          <li class="lowlight">Web Server</li>
-          <li class="lowlight">Database</li>
-          <li>Network Transport</li>
-        </ul>
         <aside>
           <ul>
             <li>You've heard lots about this already, I'm sure, so I'll be brief</li>
@@ -631,6 +1150,32 @@ Hello</code></pre>
             <li><strong>Isolation</strong> could definitely limit the damage</li>
             <li>Terminate your SSL elsewhere allowed you to isolate at least some of your risk</li>
             <li>Could lose SSL certs, but no server-side only data (API keys, DB access, admin logins)</li>
+          </ul>
+        </aside>
+      </section>
+      <section>
+        <h2>OpenSSL      </h2>
+        <h4>Heartbleed (CVE-2014-0160)</h4>
+        <pre><code class="language-c">buffer = OPENSSL_malloc(1 + 2 + payload + padding);
+bp = buffer;
+
+*bp++ = TLS1_HB_RESPONSE;
+s2n(payload, bp);
+memcpy(bp, pl, payload);</code></pre>
+        <aside>
+          <ul>
+            <li>Allocates memory for response</li>
+            <li>Payload and padding here are the lengths, not the data, confusingly</li>
+            <li>Makes bp, a pointer within buffer, initially at the start</li>
+            <li>Writes a header of response type and payload length into bp</li>
+            <li>Copies payload bytes into bp too from pl (request payload buffer). But never checks length</li>
+            <li></li>
+            <li>Trusts user input</li>
+            <li>Not best practices: opensslrampage.org, malloc reimplemented because they could do it better, but made Heartbleed less detectable</li>
+            <li>Errors aren't the issue, but general lack of consideration of info exposure: no real need to send back data at all</li>
+            <li>Could be handled better through isolation of SSL termination. Have a proxy that terminates SSL, passes plain through, only proxy vulnerable</li>
+            <li>Generally complex, poor naming choices, and again a feature nobody uses: SSL heartbeat for keepalive. 2012 RFC. Most protocols that would use it provide higher level keep-alives anyway</li>
+            <li>Updating the only answer. Anybody not ready to update strongly advised to shut their servers down asap until they could.</li>
           </ul>
         </aside>
       </section>
@@ -646,9 +1191,16 @@ Hello</code></pre>
           <li><span class='highlight'>RubyGems</span>: YAML exploit gave an external user full access to the repo</li>
           <li><span class='highlight'>NPM</span>: Full disk exposure on NPM server with a maliciously crafted URL</li>
         </ul>
+        <aside>
+          <ul>
+            <li>There's a lot of these, not hard finding options to talk about.</li>
+            <li>4,500 so far in 2015, 711 9+ out of 10.</li>
+            <li>9+ generally means terrible consequences, easy to attack, widely relevant, not a special case</li>
+          </ul>
+        </aside>
       </section>
       <section data-bespoke-state="topic-slide">
-        <h2 style="text-align: left" class="full-slide">Any questions?</h2><br>
+        <h1 class="title">Your Web Stack Would Betray You In An Instant</h1>
         <address class="vcard">
           <div class="author fn">Tim Perry</div>
           <div class="urls"><span><a href="http://twitter.com/pimterry" rel="me" class="nickname url">@pimterry</a></span></div>
@@ -658,12 +1210,6 @@ Hello</code></pre>
           <ul>
             <li>We're recruiting!</li>
             <li>Follow me on twitter for slides</li>
-            <li>C# stack: Windows!</li>
-            <li>DOS via a specific IPv6 packet</li>
-            <li>XMLDOM ActiveX control in every windows up to 8.1 is vulnerable to bil laughs</li>
-            <li>Mostly fairly stable otherwise, main attacks tend to be ActiveX component leftovers</li>
-            <li>Java: 35 remotely exploitable vulns fixed this month's Java SE release</li>
-            <li>4 exploits rated 10/10, but no details, includes many in JAX-WS etc</li>
           </ul>
         </aside>
       </section>

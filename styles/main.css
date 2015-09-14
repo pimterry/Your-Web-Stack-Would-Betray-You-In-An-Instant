@@ -10,13 +10,15 @@
     background-color: #fff !important;
   }
 }
-body {
+body,
+article {
   font-family: 'Patua One', sans;
   background-color: #fafafa;
 }
 .bespoke-slide {
   background-color: rgba(255,255,255,0);
   padding: 20px;
+  transition-duration: 0.3s;
 }
 .bespoke-slide aside {
   display: none;
@@ -101,20 +103,20 @@ address ul li:last-child {
   width: 60%;
 }
 pre {
-  padding: 26px 20px !important;
+  padding: 26px 20px;
   font-size: 16px;
 }
 .sideBySide {
+  display: flex;
   flex-direction: row;
-  width: 100%;
+  justify-content: space-around;
 }
-.sideBySide pre {
-  width: 48%;
-  margin: 0.5em 0.4em;
-  padding: 26px 10px;
-  font-size: 52%;
-  float: left;
-  display: inline-block;
+.sideBySide > * {
+  min-width: initial;
+  width: initial;
+  margin: 0.5em 0.4em !important;
+  padding: 20px 4px;
+  font-size: 70%;
 }
 .stack {
   font-size: 1.1em;
@@ -163,4 +165,8 @@ li .in-place-transition .bespoke-bullet-inactive {
 .in-place-transition .bespoke-bullet-inactive:first-of-type {
   opacity: 1;
   display: inherit;
+}
+.conclusions {
+  color: #c13038;
+  opacity: 1;
 }
