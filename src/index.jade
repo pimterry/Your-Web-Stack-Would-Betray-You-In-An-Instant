@@ -722,12 +722,52 @@ html
           li.lowlight Web Server
           li.lowlight Database
           li Network Infrastructure
+        aside
+          ul
+            li Who thinks they know how DNS works?
+            li Berkley Internet Name Daemon
+            li 85% market share
+            li Almost every page you open probably involved a request to BIND at some stage
+            li Similarly, every user that you have probably uses BIND to find you
+            li It's generally not a good idea to run your own nameservers
+            li But that doesn't mean they're not a part of your system
+            li Can be made vulnerable by their failures: phishing
+            li Nobody looks at certs
 
       section
         h2 TSIG
+        h4 RFC 2845
+        aside
+          ul
+            li For a long time DNS was essentially unsecured
+            li DNS cache poisoning and MitM generally a big problem, DNSSEC/DNSCurve
+            li Fundamentally a distributed database
+            li Needs secure methods for internal replication of transactions too
+            li Has to be more lightweight than full public/private key auth process, for when that's useful (2000 originally)
+            li TSIG is that: signing requests for zone transfers and dynamic DNS updates
+            li Secondary DNS servers updating their caches for their zone
+            li Full zone transfer includes all domains
+            li Potentially gives away details about internal infrastructure
+            li Also useful for machines that move around a lot, but want a DNS name anyway
+            li Symmetric shared keys used
+            li Need to distribute keys. Typically done out-of-band.
+            li One of many ways to do this sort of thing, DNS is complicated
+            li TSIG is not really the go-to solution for this now: DNSSEC and similar, lots of competition
 
       section
         h2 TKEY
+        h4 RFC 2930
+        aside
+          ul
+            li If you do want to do TSIG, sharing keys is a bit of hassle
+            li TKEY is a DNS record type, like an A record or a CNAME
+            li A TKEY record contains some key data, and a bunch of metadata
+            li Obviously this can't just be a server giving out it's secret keys
+            li Lots of modes. Can verify requests in various ways, can provide GSSAPI and all sorts
+            li Often used with diffie-hellman setup, so there's no public information
+            li Diffie Hellman used for agreeing on a shared secret between two servers without any preceeding information, or ever exposing the keys over the wire
+            li Bit like magic, well worth a read
+            li But essentially, this is key distribution infrastructure for a corner case of a minor feature nobody uses.
 
       section
         pre(style='font-size: 55%; width: 100%; margin: 0')
@@ -972,6 +1012,11 @@ html
                   return (result);
             }
         aside
+          ul
+            li This is the TKEY query processing implementation
+            li Takes a request for a key, tries to find the key, sends a response back with it, if you're allowed it
+            li It's quite complicated. It's also broken
+            li How would you start trying to audit this? Any idea where the catastrophic bug is?
 
       section
         pre(style='font-size: 80%; width: 100%; margin: 0')
@@ -998,6 +1043,13 @@ html
                 }
             }
         aside
+          ul
+            li Let's make it easier. It's in this bit, where we go find the record
+            li Any idea?
+            li Here we've got a request for a TKEY record with a certain name
+            li We look in the ADDITIONAL section for record names, and search for those in all our TKEY data
+            li If that fails, we look in the ANSWER section of the requestm because that's what Win2000 incorrectly does
+
 
       section
         pre(style='font-size: 80%; width: 100%; margin: 0')
@@ -1050,13 +1102,35 @@ html
               return (result);
             }
         aside
-                  
       
       section(data-bespoke-state='solution-slide')
         h2.full-slide
           | Avoid
           br
           | Complexity
+        aside
+          ul
+            li This is all really complicated
+            li You think it's hard to follow, imagine trying to explain it
+            li DNS is a complicated system
+            li BIND tries to support all of it in every case all the time though
+            li 137 RFCs listed on their site, as their 'spec'. Plus workarounds, patches, their own features, etc
+            li TSIG and TKEY are not important features in many cases.
+            li Support for Windows 2000 sending you updates even less so (~0.01% market share, end of life 5 years ago)
+            li Complexity makes things like this hard to remove
+            li Should all definitely be disablable, probably external plugins
+            li 
+            li Generally smacks of control plane/data plane confusion
+            li Cloudflare DNS proxy solves, interestingly: doesn't allow updates.
+            li Why on earth would you tie updates to the core structure of the internet directly to the most basic lookup operation of the entire internet?
+            li 
+            li Found by fuzzer by security researcher
+            li Could've been absolutely catastophic
+            li 
+            li Prefer systems that are implemented and structured simply internally
+            li Aim for that too, whether you're building your own or major tool code
+            li Prefer systems that do what you need, and no more
+            li Less is more
 
       section(data-bespoke-state='topic-slide')
         h4 Nothing is really secure, but
@@ -1106,6 +1180,19 @@ html
             s2n(payload, bp);
             memcpy(bp, pl, payload);
         aside
+          ul
+            li Allocates memory for response
+            li Payload and padding here are the lengths, not the data, confusingly
+            li Makes bp, a pointer within buffer, initially at the start
+            li Writes a header of response type and payload length into bp
+            li Copies payload bytes into bp too from pl (request payload buffer). But never checks length
+            li
+            li Trusts user input
+            li Not best practices: opensslrampage.org, malloc reimplemented because they could do it better, but made Heartbleed less detectable
+            li Errors aren't the issue, but general lack of consideration of info exposure: no real need to send back data at all
+            li Could be handled better through isolation of SSL termination. Have a proxy that terminates SSL, passes plain through, only proxy vulnerable
+            li Generally complex, poor naming choices, and again a feature nobody uses: SSL heartbeat for keepalive. 2012 RFC. Most protocols that would use it provide higher level keep-alives anyway
+            li Updating the only answer. Anybody not ready to update strongly advised to shut their servers down asap until they could.
 
       section(data-bespoke-state='topic-slide') 
         h2 The also-rans:
@@ -1138,13 +1225,6 @@ html
           ul
             li We're recruiting!
             li Follow me on twitter for slides
-            li C# stack: Windows!
-            li DOS via a specific IPv6 packet
-            li XMLDOM ActiveX control in every windows up to 8.1 is vulnerable to bil laughs
-            li Mostly fairly stable otherwise, main attacks tend to be ActiveX component leftovers
-            li Java: 35 remotely exploitable vulns fixed this month's Java SE release
-            li 4 exploits rated 10/10, but no details, includes many in JAX-WS etc
-        
 
     // build:js scripts/scripts.js
     script(src='bower_components/bespoke.js/dist/bespoke.js')
