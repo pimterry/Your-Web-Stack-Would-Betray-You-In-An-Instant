@@ -378,18 +378,6 @@ $loginOk = ($user-&gt;password === $hashedPasswordInput);</code></pre>
         </aside>
       </section>
       <section>
-        <h2>Strings</h2>
-        <ul class="bullets in-place-transition">
-          <li><img src="images/modern-string.png" style="width: 560px; margin: 30px 0 0 -35px"></li>
-          <li><img src="images/modern-string-details.png" style="width: 560px; margin: 30px 0 0 -35px"></li>
-          <li><img src="images/c-string.png" style="width: 560px; margin: 30px 0 0 -35px"></li>
-        </ul>
-      </section>
-      <section>
-        <h2>PHP 5.3.7</h2>
-        <pre style="font-size: 24px"><code class="language-c"></code><span style="color: #f77"><code class="language-c"></code>- strncat(passwd, "$", 1);</span><br><span style="color: #7f7"><code class="language-c"></code>+ strlcat(passwd, "$", 1);</span></pre>
-      </section>
-      <section>
         <h2>PHP 5.3.7</h2>
         <h4>CVE-2011-3189</h4>
         <pre><code class="language-php">crypt($password, $salt) === $salt</code></pre>
