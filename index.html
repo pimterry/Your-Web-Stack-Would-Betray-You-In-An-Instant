@@ -390,18 +390,6 @@ $loginOk = ($user-&gt;password === $hashedPasswordInput);</code></pre>
         <pre style="font-size: 24px"><code class="language-c"></code><span style="color: #f77"><code class="language-c"></code>- strncat(passwd, "$", 1);</span><br><span style="color: #7f7"><code class="language-c"></code>+ strlcat(passwd, "$", 1);</span></pre>
       </section>
       <section>
-        <h2>String concatenation</h2>
-        <ul class="bullets in-place-transition">
-          <li>
-            <pre style="font-size: 200%;"><code class="language-c">strncat(passwd, "$", 1)</code></pre><img src="images/strncat.svg" style="width: 500px; height: 98px; margin: 30px">
-          </li>
-          <li>
-            <pre style="font-size: 200%;"><code class="language-c">strlcat(passwd, "$", 1)
-</code></pre><img src="images/strlcat.svg" style="width: 500px; height: 98px; margin: 30px">
-          </li>
-        </ul>
-      </section>
-      <section>
         <h2>PHP 5.3.7</h2>
         <h4>CVE-2011-3189</h4>
         <pre><code class="language-php">crypt($password, $salt) === $salt</code></pre>
@@ -620,6 +608,7 @@ Server: Jetty(9.2.9.v20150224)
             <li>This happens before auth</li>
             <li>Actually even before connection filtering</li>
             <li>Crash any connectable Postgres instance</li>
+            <li>September 2010 to April 2013</li>
           </ul>
         </aside>
       </section>
@@ -1133,49 +1122,6 @@ if (result != ISC_R_SUCCESS) {
             <li>Pay attention to software development best practices, especially testing etc</li>
             <li>Consider the real cost of features. Turn off or limit unnecessary features where possible</li>
             <li>Isolate your components from one another, and the world</li>
-          </ul>
-        </aside>
-      </section>
-      <section data-bespoke-state="topic-slide">
-        <h2>OpenSSL</h2>
-        <h4>Heartbleed (CVE-2014-0160)</h4><img src="images/heartbleed.svg" height="350">
-        <aside>
-          <ul>
-            <li>You've heard lots about this already, I'm sure, so I'll be brief</li>
-            <li>Heartbleed notably hits every box I've talked about</li>
-            <li>The core bug is a failure to validate <strong>user input</strong></li>
-            <li>The OpenSSL code and management has some major problems</li>
-            <li>Writing their own malloc: definitely not <strong>best practice</strong></li>
-            <li>Heartbeat <strong>feature</strong> itself isn't actually that useful to most people</li>
-            <li><strong>Isolation</strong> could definitely limit the damage</li>
-            <li>Terminate your SSL elsewhere allowed you to isolate at least some of your risk</li>
-            <li>Could lose SSL certs, but no server-side only data (API keys, DB access, admin logins)</li>
-          </ul>
-        </aside>
-      </section>
-      <section>
-        <h2>OpenSSL      </h2>
-        <h4>Heartbleed (CVE-2014-0160)</h4>
-        <pre><code class="language-c">buffer = OPENSSL_malloc(1 + 2 + payload + padding);
-bp = buffer;
-
-*bp++ = TLS1_HB_RESPONSE;
-s2n(payload, bp);
-memcpy(bp, pl, payload);</code></pre>
-        <aside>
-          <ul>
-            <li>Allocates memory for response</li>
-            <li>Payload and padding here are the lengths, not the data, confusingly</li>
-            <li>Makes bp, a pointer within buffer, initially at the start</li>
-            <li>Writes a header of response type and payload length into bp</li>
-            <li>Copies payload bytes into bp too from pl (request payload buffer). But never checks length</li>
-            <li></li>
-            <li>Trusts user input</li>
-            <li>Not best practices: opensslrampage.org, malloc reimplemented because they could do it better, but made Heartbleed less detectable</li>
-            <li>Errors aren't the issue, but general lack of consideration of info exposure: no real need to send back data at all</li>
-            <li>Could be handled better through isolation of SSL termination. Have a proxy that terminates SSL, passes plain through, only proxy vulnerable</li>
-            <li>Generally complex, poor naming choices, and again a feature nobody uses: SSL heartbeat for keepalive. 2012 RFC. Most protocols that would use it provide higher level keep-alives anyway</li>
-            <li>Updating the only answer. Anybody not ready to update strongly advised to shut their servers down asap until they could.</li>
           </ul>
         </aside>
       </section>
