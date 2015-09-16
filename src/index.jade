@@ -409,24 +409,6 @@ html
             | + strlcat(passwd, "$", 1);
 
       section
-        h2 String concatenation
-        ul.bullets.in-place-transition
-          li
-            pre(style='font-size: 200%;')
-              code.language-c.
-                strncat(passwd, "$", 1)
-            img(src='images/strncat.svg',
-                style='width: 500px; height: 98px; margin: 30px')
-
-          li
-            pre(style='font-size: 200%;')
-              code.language-c.
-                strlcat(passwd, "$", 1)
-
-            img(src='images/strlcat.svg',
-                style='width: 500px; height: 98px; margin: 30px')
-
-      section
         h2 PHP 5.3.7
         h4 CVE-2011-3189
         pre
@@ -657,6 +639,7 @@ html
             li This happens before auth
             li Actually even before connection filtering
             li Crash any connectable Postgres instance
+            li September 2010 to April 2013
       section
         h2 Postgres
         h4 CVE-2013-1899
@@ -1160,50 +1143,6 @@ html
             li Pay attention to software development best practices, especially testing etc
             li Consider the real cost of features. Turn off or limit unnecessary features where possible
             li Isolate your components from one another, and the world
-
-      section(data-bespoke-state='topic-slide') 
-        h2 OpenSSL
-        h4 Heartbleed (CVE-2014-0160)
-
-        img(src='/images/heartbleed.svg',height=350)
-
-        aside
-          ul
-            li You've heard lots about this already, I'm sure, so I'll be brief
-            li Heartbleed notably hits every box I've talked about
-            li The core bug is a failure to validate <strong>user input</strong>
-            li The OpenSSL code and management has some major problems
-            li Writing their own malloc: definitely not <strong>best practice</strong>
-            li Heartbeat <strong>feature</strong> itself isn't actually that useful to most people
-            li <strong>Isolation</strong> could definitely limit the damage
-            li Terminate your SSL elsewhere allowed you to isolate at least some of your risk
-            li Could lose SSL certs, but no server-side only data (API keys, DB access, admin logins)
-
-      section
-        h2 OpenSSL      
-        h4 Heartbleed (CVE-2014-0160)
-        pre
-          code.language-c.
-            buffer = OPENSSL_malloc(1 + 2 + payload + padding);
-            bp = buffer;
-
-            *bp++ = TLS1_HB_RESPONSE;
-            s2n(payload, bp);
-            memcpy(bp, pl, payload);
-        aside
-          ul
-            li Allocates memory for response
-            li Payload and padding here are the lengths, not the data, confusingly
-            li Makes bp, a pointer within buffer, initially at the start
-            li Writes a header of response type and payload length into bp
-            li Copies payload bytes into bp too from pl (request payload buffer). But never checks length
-            li
-            li Trusts user input
-            li Not best practices: opensslrampage.org, malloc reimplemented because they could do it better, but made Heartbleed less detectable
-            li Errors aren't the issue, but general lack of consideration of info exposure: no real need to send back data at all
-            li Could be handled better through isolation of SSL termination. Have a proxy that terminates SSL, passes plain through, only proxy vulnerable
-            li Generally complex, poor naming choices, and again a feature nobody uses: SSL heartbeat for keepalive. 2012 RFC. Most protocols that would use it provide higher level keep-alives anyway
-            li Updating the only answer. Anybody not ready to update strongly advised to shut their servers down asap until they could.
 
       section(data-bespoke-state='topic-slide') 
         h2 The also-rans:
