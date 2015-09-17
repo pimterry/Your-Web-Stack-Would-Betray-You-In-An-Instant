@@ -1098,6 +1098,24 @@ html
             li Prefer systems that do what you need, and no more
             li Less is more
 
+      section(data-bespoke-state='topic-slide') 
+        h2 The also-rans:
+
+        ul
+          li <span class='highlight'>Node.JS</span>: Cross-request header stealing <br/>(CVE-2012-2330)
+          li <span class='highlight'>Python</span>: Remote code execution via builtin socket receive function <br/>(CVE-2014-1912)
+          li <span class='highlight'>GCC</span>: Optimizations remove checks required to avoid overflow exploits<br/>(CVE-2009-1897)
+          li <span class='highlight'>WebSockets</span>: Security bug in initial spec, when used with caching proxies
+          li <span class='highlight'>SSL/TLS</span>: BEAST/CRIME/BREACH attacks against SSL and TLS<br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)
+          li <span class='highlight'>MongoDB</span>: Overflow exploits, crashing servers with a single request <br/>(CVE-2012-6619, CVE-2013-2132)
+          li <span class='highlight'>RubyGems</span>: YAML exploit gave an external user full access to the repo
+          li <span class='highlight'>NPM</span>: Full disk exposure on NPM server with a maliciously crafted URL
+        aside
+          ul
+            li There's a lot of these, not hard finding options to talk about.
+            li 4,500 so far in 2015, 711 9+ out of 10.
+            li 9+ generally means terrible consequences, easy to attack, widely relevant, not a special case
+
       section(data-bespoke-state='topic-slide')
         h4 Nothing is really secure, but
         h2.full-slide Don't Panic
@@ -1116,24 +1134,6 @@ html
             li Pay attention to software development best practices, especially testing etc
             li Consider the real cost of features. Turn off or limit unnecessary features where possible
             li Isolate your components from one another, and the world
-
-      section(data-bespoke-state='topic-slide') 
-        h2 The also-rans:
-
-        ul
-          li <span class='highlight'>Node.JS</span>: Cross-request header stealing <br/>(CVE-2012-2330)
-          li <span class='highlight'>Python</span>: Remote code execution via builtin socket receive function <br/>(CVE-2014-1912)
-          li <span class='highlight'>GCC</span>: Optimizations remove checks required to avoid overflow exploits<br/>(CVE-2009-1897)
-          li <span class='highlight'>WebSockets</span>: Security bug in initial spec, when used with caching proxies
-          li <span class='highlight'>SSL/TLS</span>: BEAST/CRIME/BREACH attacks against SSL and TLS<br/>(CVE-2011-3389, CVE-2012-4929, CVE-2013-3587)
-          li <span class='highlight'>MongoDB</span>: Overflow exploits, crashing servers with a single request <br/>(CVE-2012-6619, CVE-2013-2132)
-          li <span class='highlight'>RubyGems</span>: YAML exploit gave an external user full access to the repo
-          li <span class='highlight'>NPM</span>: Full disk exposure on NPM server with a maliciously crafted URL
-        aside
-          ul
-            li There's a lot of these, not hard finding options to talk about.
-            li 4,500 so far in 2015, 711 9+ out of 10.
-            li 9+ generally means terrible consequences, easy to attack, widely relevant, not a special case
 
       section(data-bespoke-state='topic-slide') 
         h1.title Your Web Stack Would Betray You In An Instant
