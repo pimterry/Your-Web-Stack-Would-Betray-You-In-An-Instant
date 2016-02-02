@@ -100,14 +100,6 @@ html
             li also what you can do to avoid this
             li Before we do that though
 
-      section
-        h2 (With caveats)
-        ul
-          li Read the OWASP Top 10
-          li Learn to avoid SQL (and other) injections
-          li Hash and salt passwords
-          li Don't build your own crypto
-
       section(data-bespoke-state='solution-slide')
         h2.full-slide
           | Be Ready  
@@ -388,51 +380,6 @@ html
             li Unfortunately, doesn't do this because of the last arg
             li Fixed another important security issue
             li Recommended for immediate update for 5 days
-
-      section
-        h2 Strings
-        ul.bullets.in-place-transition
-          li
-            img(src='images/modern-string.png',
-                style='width: 560px; margin: 30px 0 0 -35px')
-          li
-            img(src='images/modern-string-details.png',
-                style='width: 560px; margin: 30px 0 0 -35px')
-          li
-            img(src='images/c-string.png',
-                style='width: 560px; margin: 30px 0 0 -35px')
-
-      section
-        h2 PHP 5.3.7
-        pre(style='font-size: 24px')
-          code.language-c.
-
-          span(style='color: #f77')
-            code.language-c.
-            | - strncat(passwd, "$", 1);
-
-          br
-          span(style='color: #7f7')
-            code.language-c.
-            | + strlcat(passwd, "$", 1);
-
-      section
-        h2 String concatenation
-        ul.bullets.in-place-transition
-          li
-            pre(style='font-size: 200%;')
-              code.language-c.
-                strncat(passwd, "$", 1)
-            img(src='images/strncat.svg',
-                style='width: 500px; height: 98px; margin: 30px')
-
-          li
-            pre(style='font-size: 200%;')
-              code.language-c.
-                strlcat(passwd, "$", 1)
-
-            img(src='images/strlcat.svg',
-                style='width: 500px; height: 98px; margin: 30px')
 
       section
         h2 PHP 5.3.7
