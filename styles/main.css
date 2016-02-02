@@ -100,7 +100,8 @@ address ul li:last-child {
   text-align: right;
 }
 .logo-big {
-  width: 60%;
+  width: 360px;
+  height: 83px;
 }
 pre {
   padding: 26px 20px;
