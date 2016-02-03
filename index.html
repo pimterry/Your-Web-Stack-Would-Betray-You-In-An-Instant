@@ -74,7 +74,7 @@
         </aside>
       </section>
       <section>
-        <h2>Things that will be loudly publically insecure:</h2>
+        <h2>Your greatest weakness<br/>is <small>(probably)</small> not your code</h2>
         <ul class="stack">
           <li class="lowlight">Your Code</li>
           <li>Web Framework</li>
@@ -230,7 +230,7 @@ end</code></pre>
         </aside>
       </section>
       <section>
-        <h2>Arbitrary Code Execution with YAML</h2>
+        <h2>Arbitrary Code Execution<br/>with YAML</h2>
         <pre><code class="language-yaml">--- !ruby/hash:NamedRouteCollection
 "ignored; puts 'Hello'; \n__END__\n": 
     !ruby/object:OpenStruct 
@@ -1105,31 +1105,8 @@ if (result != ISC_R_SUCCESS) {
         <aside>
           <ul>
             <li>There's a lot of these, not hard finding options to talk about.</li>
-            <li>4,500 so far in 2015, 711 9+ out of 10.</li>
+            <li>700 so far in this year, start of February(!), 59 rated 9+ out of 10.</li>
             <li>9+ generally means terrible consequences, easy to attack, widely relevant, not a special case</li>
-          </ul>
-        </aside>
-      </section>
-      <section data-bespoke-state="topic-slide">
-        <h4>Nothing is really secure, but</h4>
-        <h2 class="full-slide">Don't Panic</h2>
-        <h3 class="conclusions">
-          <ul>
-            <li>Be ready to update</li>
-            <li>Fear user input</li>
-            <li>Value best practices</li>
-            <li>Keep errors secret</li>
-            <li>Isolate your components</li>
-            <li>Avoid complexity</li>
-          </ul>
-        </h3>
-        <aside>
-          <ul>
-            <li>If nothing else, watch for security notices, be ready to update <em>fast</em></li>
-            <li>Be very cautious around user input. Lots of risk that's easily missed.</li>
-            <li>Pay attention to software development best practices, especially testing etc</li>
-            <li>Consider the real cost of features. Turn off or limit unnecessary features where possible</li>
-            <li>Isolate your components from one another, and the world</li>
           </ul>
         </aside>
       </section>
